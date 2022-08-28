@@ -1,0 +1,60 @@
+.control {
+  /* display: block; */
+  width: 100%;
+  padding: 0.5rem;
+  margin-left: 0.25rem;
+  color: black;
+  font-size: 1rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* .control:hover {
+  background-color: rgba(0, 150, 0, 0.05);
+  color: black;
+} */
+
+.subLink {
+  /* font-weight: 500; */
+  /* display: block; */
+  text-decoration: none;
+  padding: 0.5rem;
+  padding-left: 1rem;
+  margin-left: 1.84rem;
+  font-size: 1rem;
+  color: rgb(115, 115, 115);
+  border-left: 1px solid lightgray;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* .link:hover {
+  background-color: rgba(0, 150, 0, 0.05);;
+  color: black;
+} */
+
+.chevron {
+  transition: 0.2s;
+}
+
+.menu {
+  margin-top: -1rem;
+}
+
+.collapsible:hover {
+  cursor: pointer;
+}
+
+.flexContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.icon {
+  background-color: #e7f5ff;
+  padding: 0.18rem 0.18rem 0rem;
+  border-radius: 0.4rem;
+}
+
+.label {
+  margin-left: 0.5rem;
+}
