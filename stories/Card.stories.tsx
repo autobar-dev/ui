@@ -1,4 +1,4 @@
-import Card from '../components/organisms/Card'
+import Card from '../src/components/organisms/Card'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 export default {

@@ -1,4 +1,4 @@
-import NavItem from '../components/atoms/NavItem'
+import NavItem from '../src/components/atoms/NavItem'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 
 export default {

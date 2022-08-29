@@ -1,13 +1,24 @@
-import Navbar from './/Navbar'
 import { IconBrandFacebook, IconBrandInstagram } from '@tabler/icons';
 import Link from 'next/link'
-import styles from './styles/Layout.module.css'
+import Footer from '../Footer';
+import Header from '../Header';
+import { useStyles } from './styles';
 
 export default function Layout({ children }: { children: any }) {
-  return (
-    <>
-      <Navbar />
+  const { classes } = useStyles();
 
+  return (
+    <div className={classes.root}>
+      <Header />
+      <div className={classes.container}>
+        { children }
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+/* 
       <div className={styles.wrapper}>
         {children}
       </div>
@@ -24,7 +35,4 @@ export default function Layout({ children }: { children: any }) {
             <a className={styles.link}><IconBrandInstagram size={30} stroke={1.1} color='black' /></a>
           </Link>
         </div>
-      </div>
-    </>
-  )
-}
+      </div> */
