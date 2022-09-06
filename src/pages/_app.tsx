@@ -16,8 +16,20 @@ export default function App(props: AppProps) {
         withGlobalStyles
         withNormalizeCSS
         theme={{
-          colorScheme: 'dark',
-          primaryColor: "orange",
+          colorScheme: "dark",
+          colors: {
+            brand: ["#087f5b", "#0b7285", "#1864ab", "#364fc7", "#5f3dc4", "#862e9c", "#a61e4d", "#c92a2a", "#E3B04B", "#e7bb65"],
+          },
+          primaryColor: "brand",
+          defaultRadius: "10px",
+          fontFamily: "Outfit",
+          fontSizes: {
+            xs: 12,
+            sm: 14,
+            md: 16,
+            lg: 18,
+            xl: 20,
+          },
         }}
       >
         <Global />

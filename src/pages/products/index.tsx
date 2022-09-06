@@ -17,7 +17,7 @@ export default function ProductsPage({ products, productsError }: ProductsPagePr
   return (
     <>
       <Head>
-        <title>Products | autobar</title>
+        <title>Products | Autobar</title>
       </Head>
       <Shell>
         <h1>Products list</h1>

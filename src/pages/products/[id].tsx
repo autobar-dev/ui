@@ -23,7 +23,7 @@ export default function ProductPage({ product, productError }: ProductPagePropsT
   return (
     <>
       <Head>
-        <title>{ productError ? "Not Found" : product.name } | autobar</title>
+        <title>{ productError ? "Not Found" : product.name } | Autobar</title>
       </Head>
       <Layout>
         <h1>Product page</h1>

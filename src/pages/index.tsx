@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>Home | autobar</title>
+        <title>Home | Autobar</title>
       </Head>
       <Shell>
         <Title>Home Page</Title>
