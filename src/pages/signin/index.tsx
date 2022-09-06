@@ -1,14 +1,17 @@
 import { Checkbox, PasswordInput, TextInput, Text, Button, Loader } from '@mantine/core';
+import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import Link from 'next/link';
+import { GetServerSideProps } from 'next/types';
 import React, { useEffect, useMemo, useState } from 'react'
 import KeyIcon from '../../components/atoms/KeyIcon';
 import MessageIcon from '../../components/atoms/MessageIcon';
 import Logo from '../../components/molecules/Logo';
+import parseCookieString from '../../utils/helpers/parseCookieString';
 import { useStyles } from './styles';
 
 async function SendSignInRequest(email: string, password: string, rememberMe: boolean) {
-  const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/auth/signin", {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -20,11 +23,18 @@ async function SendSignInRequest(email: string, password: string, rememberMe: bo
     }),
   });
 
-  console.log(response);
+  if(response.status == 200) {
+    return;
+  } else {
+    throw new Error(await response.text());
+  }
 }
 
 export default function SignInPage() {
   const { classes } = useStyles();
+  const router = useRouter();
+
+  const { r } = router.query;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,10 +42,44 @@ export default function SignInPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const handleSignInButtonClick = async () => {
-    setLoading(true);
-    await SendSignInRequest(email, password, rememberMe);
-    setLoading(false);
+    setEmailError("");
+    setPasswordError("");
+
+    const emailValidationRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+
+    const emailMatches = emailValidationRegex.test(email);
+    const passwordMatches = password.length > 0;
+
+    if(!emailMatches || !passwordMatches) {
+      if(!emailMatches) {
+        setEmailError("Email is invalid");
+      }
+
+      if(!passwordMatches) {
+        setPasswordError("Password is invalid");
+      }
+    } else {
+      setLoading(true);
+      
+      try {
+        await SendSignInRequest(email, password, rememberMe);
+
+        if(r && typeof r == "string") {
+          router.push(decodeURIComponent(r));
+        } else {
+          router.push("/");
+        }
+      } catch(e) {
+        console.error(e);
+
+        setPasswordError("Invalid email or password");
+        setLoading(false);
+      }
+    }
   };
 
   return (
@@ -57,6 +101,7 @@ export default function SignInPage() {
           disabled={loading}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          error={emailError ? emailError : false}
           icon={
             <MessageIcon
               className={classes.inputIcon}
@@ -71,6 +116,7 @@ export default function SignInPage() {
           disabled={loading}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          error={passwordError ? passwordError : false}
           icon={
             <KeyIcon
               className={classes.inputIcon}
@@ -113,4 +159,36 @@ export default function SignInPage() {
       </div>
     </>
   )
+}
+
+export async function getServerSideProps(context: any) {
+  const { req, query } = context;
+
+  let redirectPath: string | undefined = undefined;
+  const cookies = parseCookieString(req.headers.cookie);
+
+  if(cookies.access_token) {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        access_token: cookies.access_token,
+      }),
+    });
+
+    if(response.status == 200) {
+      redirectPath = query.r || "/";
+    }
+  }
+
+  return {
+    redirect: redirectPath ? {
+      destination: redirectPath,
+      permanent: false,
+    } : undefined,
+    props: {},
+  };
 }
