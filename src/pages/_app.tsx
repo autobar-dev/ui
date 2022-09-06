@@ -38,7 +38,7 @@ export default function App(props: AppProps) {
           },
         }}
       >
-        <UserContext.Provider value={{ user, setUser, flushUser: () => flushUser(setUser, `${process.env.NEXT_PUBLIC_API_URL}/graphql`) }}>
+        <UserContext.Provider value={{ user, setUser, flushUser: () => flushUser(setUser, `${process.env.NEXT_PUBLIC_URL}/api/graphql`) }}>
           <Global />
           <Component {...pageProps} />
         </UserContext.Provider>

@@ -10,7 +10,7 @@ import parseCookieString from '../../utils/helpers/parseCookieString';
 import { useStyles } from './styles';
 
 async function SendSignInRequest(email: string, password: string, rememberMe: boolean) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/signin`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ export async function getServerSideProps(context: any) {
   const cookies = parseCookieString(req.headers.cookie);
 
   if(cookies.access_token) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/verify`, {
       method: 'POST',
       credentials: 'include',
       headers: {
