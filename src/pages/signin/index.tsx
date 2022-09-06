@@ -2,7 +2,6 @@ import { Checkbox, PasswordInput, TextInput, Text, Button, Loader } from '@manti
 import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import { GetServerSideProps } from 'next/types';
 import React, { useEffect, useMemo, useState } from 'react'
 import KeyIcon from '../../components/atoms/KeyIcon';
 import MessageIcon from '../../components/atoms/MessageIcon';
