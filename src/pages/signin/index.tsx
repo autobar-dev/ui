@@ -2,10 +2,11 @@ import { Checkbox, PasswordInput, TextInput, Text, Button, Loader } from '@manti
 import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import KeyIcon from '../../components/atoms/KeyIcon';
 import MessageIcon from '../../components/atoms/MessageIcon';
 import Logo from '../../components/molecules/Logo';
+import UserContext from '../../contexts/UserContext';
 import parseCookieString from '../../utils/helpers/parseCookieString';
 import { useStyles } from './styles';
 
@@ -31,6 +32,7 @@ async function SendSignInRequest(email: string, password: string, rememberMe: bo
 
 export default function SignInPage() {
   const { classes } = useStyles();
+  const { flushUser } = useContext(UserContext);
   const router = useRouter();
 
   const { r } = router.query;
@@ -66,6 +68,7 @@ export default function SignInPage() {
       
       try {
         await SendSignInRequest(email, password, rememberMe);
+        await flushUser();
 
         if(r && typeof r == "string") {
           router.push(decodeURIComponent(r));
@@ -116,6 +119,7 @@ export default function SignInPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={passwordError ? passwordError : false}
+          onKeyDown={(e) => e.key == "Enter" && handleSignInButtonClick()}
           icon={
             <KeyIcon
               className={classes.inputIcon}
