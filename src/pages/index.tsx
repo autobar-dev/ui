@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Head from 'next/head'
-import { Title } from '@mantine/core'
+import { Code, Title } from '@mantine/core'
 import Shell from '../components/organisms/Shell'
+import UserContext from '../contexts/UserContext';
 
 export default function HomePage() {
+  const { user } = useContext(UserContext);
+
   return (
     <>
       <Head>
@@ -11,6 +14,9 @@ export default function HomePage() {
       </Head>
       <Shell>
         <Title>Home Page</Title>
+        <Code>
+          { JSON.stringify(user, null, 2) }
+        </Code>
       </Shell>
     </>
   )

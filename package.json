@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "ts-node-dev --ignore-watch .next/ src/server.ts",
+    "build": "tsc",
+    "start": "node src/server.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },

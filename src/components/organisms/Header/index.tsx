@@ -10,8 +10,6 @@ export default function Header() {
 
   const userContext = useContext(UserContext);
 
-  console.log('userContext', userContext);
-
   return (
     <header className={classes.root}>
       <Title>autobar</Title>
