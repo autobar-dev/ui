@@ -8,7 +8,7 @@ import { useStyles } from "./styles";
 export default function Header() {
   const { classes } = useStyles();
 
-  const userContext = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   return (
     <header className={classes.root}>
@@ -21,10 +21,8 @@ export default function Header() {
         <Link href="/contact" passHref><a>Contact</a></Link>
       </nav>
 
-      <UserMenu />
-
-      {/* {
-        userContext.user ? 
+      {
+        user ? 
           <UserMenu />
         :
           <Link href="/signin" passHref>
@@ -33,7 +31,7 @@ export default function Header() {
               color="primary"
             >Sign In</Button>
           </Link>
-      } */}
+      }
     </header>
   );
 }

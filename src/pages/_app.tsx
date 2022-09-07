@@ -3,14 +3,20 @@ import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
 import Global from '../components/organisms/Global';
 import UserContext from '../contexts/UserContext';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import User from '../types/User';
-import flushUser from '../utils/helpers/flushUser';
+import flushUserHelper from '../utils/helpers/flushUser';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
 
   const [user, setUser] = useState<User | undefined>(undefined);
+  const flushUser = () => flushUserHelper(user, setUser, `${process.env.NEXT_PUBLIC_URL}/api/graphql`);
+
+  // Flush user on first load
+  useEffect(() => {
+    flushUser();
+  }, []);
 
   return (
     <>
@@ -38,7 +44,7 @@ export default function App(props: AppProps) {
           },
         }}
       >
-        <UserContext.Provider value={{ user, setUser, flushUser: () => flushUser(setUser, `${process.env.NEXT_PUBLIC_URL}/api/graphql`) }}>
+        <UserContext.Provider value={{ user, setUser, flushUser, }}>
           <Global />
           <Component {...pageProps} />
         </UserContext.Provider>
@@ -46,3 +52,11 @@ export default function App(props: AppProps) {
     </>
   );
 }
+
+export async function getServerSideProps({ req }: any) {
+  const cookies = req.cookies;
+
+  console.log("available cookies: ", cookies);
+
+  return { cookies };
+};
