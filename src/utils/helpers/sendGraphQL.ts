@@ -10,6 +10,7 @@ export async function sendGraphQL(query: DocumentNode, url?: string): Promise<an
     const response = await fetch(gqlUrl, {
       method: "POST",
       mode: 'cors',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },

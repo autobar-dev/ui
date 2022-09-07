@@ -2,7 +2,6 @@ import { Checkbox, PasswordInput, TextInput, Text, Button, Loader } from '@manti
 import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import { GetServerSideProps } from 'next/types';
 import React, { useEffect, useMemo, useState } from 'react'
 import KeyIcon from '../../components/atoms/KeyIcon';
 import MessageIcon from '../../components/atoms/MessageIcon';
@@ -11,7 +10,7 @@ import parseCookieString from '../../utils/helpers/parseCookieString';
 import { useStyles } from './styles';
 
 async function SendSignInRequest(email: string, password: string, rememberMe: boolean) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/signin`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -168,7 +167,7 @@ export async function getServerSideProps(context: any) {
   const cookies = parseCookieString(req.headers.cookie);
 
   if(cookies.access_token) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/verify`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/verify`, {
       method: 'POST',
       credentials: 'include',
       headers: {

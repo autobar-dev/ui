@@ -1,9 +1,14 @@
 import { Button, Title } from "@mantine/core";
 import Link from "next/link";
+import { useContext } from "react";
+import UserContext from "../../../contexts/UserContext";
+import UserMenu from "../../molecules/UserMenu";
 import { useStyles } from "./styles";
 
 export default function Header() {
   const { classes } = useStyles();
+
+  const userContext = useContext(UserContext);
 
   return (
     <header className={classes.root}>
@@ -16,12 +21,19 @@ export default function Header() {
         <Link href="/contact" passHref><a>Contact</a></Link>
       </nav>
 
-      <Link href="/signin" passHref>
-        <Button
-          className={classes.signInButton}
-          color="primary"
-        >Sign In</Button>
-      </Link>
+      <UserMenu />
+
+      {/* {
+        userContext.user ? 
+          <UserMenu />
+        :
+          <Link href="/signin" passHref>
+            <Button
+              className={classes.signInButton}
+              color="primary"
+            >Sign In</Button>
+          </Link>
+      } */}
     </header>
   );
 }

@@ -2,9 +2,15 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
 import Global from '../components/organisms/Global';
+import UserContext from '../contexts/UserContext';
+import { useState } from 'react';
+import User from '../types/User';
+import flushUser from '../utils/helpers/flushUser';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
+
+  const [user, setUser] = useState<User | undefined>(undefined);
 
   return (
     <>
@@ -32,8 +38,10 @@ export default function App(props: AppProps) {
           },
         }}
       >
-        <Global />
-        <Component {...pageProps} />
+        <UserContext.Provider value={{ user, setUser, flushUser: () => flushUser(setUser, `${process.env.NEXT_PUBLIC_URL}/api/graphql`) }}>
+          <Global />
+          <Component {...pageProps} />
+        </UserContext.Provider>
       </MantineProvider>
     </>
   );
