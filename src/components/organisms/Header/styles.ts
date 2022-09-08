@@ -10,10 +10,10 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     paddingRight: "1rem",
     borderBottom: "1px solid #eaeaea",
     width: '100%',
-    height: '60px',
+    height: '70px',
   },
   logo: {
-    display: "inline-block",
+    maxHeight: "30px",
   },
   navbar: {
     display: "inline-flex",

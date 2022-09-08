@@ -90,12 +90,15 @@ export default function SignInPage() {
         <title>Sign In | Autobar</title>
       </Head>
       <div className={classes.container}>
-        <Logo
-          iconColor="#E3B04B"
-          textColor="#f8f8f8"
-          type={"logo-with-text"}
-          className={classes.logo}
-        />
+        <Link href="/">
+          <a className={classes.logo}>
+            <Logo
+              iconColor="#E3B04B"
+              textColor="#f8f8f8"
+              type={"logo-with-text"}
+            />
+          </a>
+        </Link>
         <TextInput
           label="Email"
           className={classes.emailInput}
