@@ -1,9 +1,9 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { MantineProvider } from '@mantine/core';
+import { Center, Loader, LoadingOverlay, MantineProvider } from '@mantine/core';
 import Global from '../components/organisms/Global';
 import UserContext from '../contexts/UserContext';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import User from '../types/User';
 import flushUserHelper from '../utils/helpers/flushUser';
 
@@ -11,11 +11,14 @@ export default function App(props: AppProps) {
   const { Component, pageProps } = props;
 
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [isUserLoading, setIsUserLoading] = useState(true);
   const flushUser = () => flushUserHelper(user, setUser, `${process.env.NEXT_PUBLIC_URL}/api/graphql`);
 
   // Flush user on first load
   useEffect(() => {
-    flushUser();
+    flushUser().then(() => {
+      setIsUserLoading(false);
+    });
   }, []);
 
   return (
@@ -46,17 +49,18 @@ export default function App(props: AppProps) {
       >
         <UserContext.Provider value={{ user, setUser, flushUser, }}>
           <Global />
-          <Component {...pageProps} />
+
+          {
+            isUserLoading ? (
+              <Center style={{ width: "100vw", height: "100vh" }}>
+                <Loader size={"xl"} />
+              </Center>              
+            )
+            :
+              <Component {...pageProps} />
+          }
         </UserContext.Provider>
       </MantineProvider>
     </>
   );
 }
-
-export async function getServerSideProps({ req }: any) {
-  const cookies = req.cookies;
-
-  console.log("available cookies: ", cookies);
-
-  return { cookies };
-};
