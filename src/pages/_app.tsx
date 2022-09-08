@@ -6,6 +6,7 @@ import UserContext from '../contexts/UserContext';
 import { useEffect, useMemo, useState } from 'react';
 import User from '../types/User';
 import flushUserHelper from '../utils/helpers/flushUser';
+import { RouterTransition } from '../components/organisms/RouterTransition';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -44,6 +45,7 @@ export default function App(props: AppProps) {
           },
         }}
       >
+        <RouterTransition />
         <UserContext.Provider value={{ user, setUser, flushUser, }}>
           <Global />
           <Component {...pageProps} />
