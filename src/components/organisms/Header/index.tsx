@@ -1,7 +1,7 @@
 import { Button, Burger, ColorSchemeProvider } from "@mantine/core";
 import { useMediaQuery, useDisclosure, useClickOutside } from "@mantine/hooks";
 import Link from "next/link";
-import { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import UserContext from "../../../contexts/UserContext";
 import Logo from "../../molecules/Logo";
 import UserMenu from "../../molecules/UserMenu";
@@ -23,15 +23,16 @@ export default function Header() {
   const [opened, { close, toggle }] = useDisclosure(false);
   const isSmallScreen = useMediaQuery(theme.fn.smallerThan("sm").split("@media ")[1]);
 
-  const sidebarRef = useRef(null);
-  const burgerRef = useRef(null);
-  useClickOutside(() => close(), null, [sidebarRef.current!, burgerRef.current!]);
+  // const sidebarRef = useRef(null);
+  // const burgerRef = useRef(null);
+  // useClickOutside(() => close(), null, [sidebarRef.current!, burgerRef.current!]);
 
-  // const [sidebar, setSidebar] = useState(null);
-  // const [burger, setBurger] = useState(null);
-  // useClickOutside(() => close(), null, [sidebar, burger]);
+  const [sidebar, setSidebar] = useState<HTMLElement | null>(null);
+  const [burger, setBurger] = useState<HTMLElement | null>(null);
+  
+  useClickOutside(() => close(), null, [sidebar!, burger!]);
 
-  useClickOutside(() => close(), null, []);
+  // useClickOutside(() => close(), null, []);
 
   const router = useRouter();
   const currentRoute = router.pathname;
@@ -39,15 +40,29 @@ export default function Header() {
   return (
     <>
       {isSmallScreen &&
-        // <div ref={setSidebar} className={cx(classes.sidebar, { [classes.sidebarActive]: opened === true })}>
-        <div ref={sidebarRef} className={cx(classes.sidebar, { [classes.sidebarActive]: opened === true })}>
-          <Sidebar handleClick={close} links={menuList} />
+        <div
+          ref={r => setSidebar(r)} 
+          className={
+            cx(classes.sidebar, { [classes.sidebarActive]: opened === true })
+          }
+        >
+        {/* <div ref={sidebarRef} className={cx(classes.sidebar, { [classes.sidebarActive]: opened === true })}> */}
+          <Sidebar
+            handleClick={close}
+            links={menuList}
+          />
         </div>
       }
       <header className={classes.root}>
         <div className={classes.leftContainer}>
-          {/* <Burger ref={setBurger} opened={opened} onClick={toggle} className={classes.burger} size="sm" /> */}
-          <Burger ref={burgerRef} opened={opened} onClick={toggle} className={classes.burger} size="sm" />
+          <Burger
+            ref={r => setBurger(r)}
+            opened={opened}
+            onClick={toggle}
+            className={classes.burger}
+            size="sm"
+          />
+          {/* <Burger ref={burgerRef} opened={opened} onClick={toggle} className={classes.burger} size="sm" /> */}
 
           <Link href="/" passHref>
             <a style={{
