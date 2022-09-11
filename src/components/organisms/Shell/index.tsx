@@ -7,9 +7,16 @@ import { useStyles } from './styles';
 export default function Layout({ children }: { children: any }) {
   const { classes } = useStyles();
 
+  const menuList = [
+    { label: "Home", link: "/" },
+    { label: "Products", link: "products" },
+    { label: "Stations", link: "/stations" },
+    { label: "Contact", link: "/contact" },
+  ]
+
   return (
     <div className={classes.root}>
-      <Header />
+      <Header links={menuList}/>
       <div className={classes.container}>
         { children }
       </div>
