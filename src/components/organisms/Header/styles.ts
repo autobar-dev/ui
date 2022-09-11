@@ -90,6 +90,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     transition: "all 0.2s",
     minHeight: "calc(100vh - 60px)",
     backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    zIndex: 2,
     borderRight: `1px solid ${
       theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
     }`,

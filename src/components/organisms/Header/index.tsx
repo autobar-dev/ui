@@ -1,7 +1,7 @@
 import { Button, Burger } from "@mantine/core";
 import { useMediaQuery, useDisclosure, useClickOutside } from "@mantine/hooks";
 import Link from "next/link";
-import { useContext, useRef, useEffect } from "react";
+import { useContext, useRef, useState } from "react";
 import UserContext from "../../../contexts/UserContext";
 import Logo from "../../molecules/Logo";
 import UserMenu from "../../molecules/UserMenu";
@@ -20,13 +20,13 @@ const menuList = [
 export default function Header() {
   const { classes, cx, theme } = useStyles();
   const { user } = useContext(UserContext);
-  const [opened, { toggle }] = useDisclosure(false);
+  const [opened, { close, toggle }] = useDisclosure(false);
   const isSmallScreen = useMediaQuery(theme.fn.smallerThan("sm").split("@media ")[1]);
 
   const sidebarRef = useRef(null);
   const burgerRef = useRef(null);
-  useClickOutside(() => toggle(), null, [sidebarRef.current!, burgerRef.current!]);
-  
+  useClickOutside(() => close(), null, [sidebarRef.current!, burgerRef.current!]);
+
   const router = useRouter();
   const currentRoute = router.pathname;
   
@@ -34,7 +34,7 @@ export default function Header() {
     <>
       {isSmallScreen &&
         <div ref={sidebarRef} className={cx(classes.sidebar, { [classes.sidebarActive]: opened === true })}>
-          <Sidebar handleClick={toggle} links={menuList} />
+          <Sidebar handleClick={close} links={menuList} />
         </div>
       }
       <header className={classes.root}>
