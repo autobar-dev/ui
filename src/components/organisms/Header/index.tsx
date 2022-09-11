@@ -1,4 +1,4 @@
-import { Button, Burger } from "@mantine/core";
+import { Button, Burger, ColorSchemeProvider } from "@mantine/core";
 import { useMediaQuery, useDisclosure, useClickOutside } from "@mantine/hooks";
 import Link from "next/link";
 import { useContext, useRef, useState } from "react";
@@ -27,18 +27,26 @@ export default function Header() {
   const burgerRef = useRef(null);
   useClickOutside(() => close(), null, [sidebarRef.current!, burgerRef.current!]);
 
+  // const [sidebar, setSidebar] = useState(null);
+  // const [burger, setBurger] = useState(null);
+  // useClickOutside(() => close(), null, [sidebar, burger]);
+
+  useClickOutside(() => close(), null, []);
+
   const router = useRouter();
   const currentRoute = router.pathname;
   
   return (
     <>
       {isSmallScreen &&
+        // <div ref={setSidebar} className={cx(classes.sidebar, { [classes.sidebarActive]: opened === true })}>
         <div ref={sidebarRef} className={cx(classes.sidebar, { [classes.sidebarActive]: opened === true })}>
           <Sidebar handleClick={close} links={menuList} />
         </div>
       }
       <header className={classes.root}>
         <div className={classes.leftContainer}>
+          {/* <Burger ref={setBurger} opened={opened} onClick={toggle} className={classes.burger} size="sm" /> */}
           <Burger ref={burgerRef} opened={opened} onClick={toggle} className={classes.burger} size="sm" />
 
           <Link href="/" passHref>
