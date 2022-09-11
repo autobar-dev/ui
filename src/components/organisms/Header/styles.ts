@@ -8,9 +8,11 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     alignItems: "center",
     paddingLeft: "1rem",
     paddingRight: "1rem",
-    borderBottom: "1px solid #eaeaea",
     width: "100%",
     height: "60px",
+    borderBottom: `1px solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
+    }`,
   },
 
   burger: {
@@ -21,11 +23,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     },
   },
 
-  logo: {
-    maxHeight: "30px",
-  },
-
-  logoContainer: {
+  leftContainer: {
     display: "flex",
     flex: "1 1 0",
     justifyContent: "flex-start",
@@ -64,6 +62,12 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     },
   },
 
+  navbarItemActive: {
+    "&, &:hover": {
+      backgroundColor: theme.fn.variant({ variant: "light", color: theme.primaryColor }).background,
+    },
+  },
+
   signInButton: {
     display: "inline-block",
   },
@@ -73,5 +77,25 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     flex: "1 0 0",
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+
+  sidebar: {
+    display: "flex",
+    flexDirection: "column",
+    position: "fixed",
+    top: "60px",
+    width: "288px",
+    left: "-288px",
+    padding: "24px 16px",
+    transition: "all 0.2s",
+    minHeight: "calc(100vh - 60px)",
+    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    borderRight: `1px solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
+    }`,
+  },
+
+  sidebarActive: {
+    left: 0,
   },
 }));
