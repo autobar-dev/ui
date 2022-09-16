@@ -23,30 +23,23 @@ export default function Header() {
   const [opened, { close, toggle }] = useDisclosure(false);
   const isSmallScreen = useMediaQuery(theme.fn.smallerThan("sm").split("@media ")[1]);
 
-  // const sidebarRef = useRef(null);
-  // const burgerRef = useRef(null);
-  // useClickOutside(() => close(), null, [sidebarRef.current!, burgerRef.current!]);
+  const [sidebarRef, setSidebarRef] = useState<HTMLElement | null>(null);
+  const [burgerRef, setBurgerRef] = useState<HTMLElement | null>(null);
 
-  const [sidebar, setSidebar] = useState<HTMLElement | null>(null);
-  const [burger, setBurger] = useState<HTMLElement | null>(null);
-  
-  useClickOutside(() => close(), null, [sidebar!, burger!]);
-
-  // useClickOutside(() => close(), null, []);
+  useClickOutside(() => close(), null, [sidebarRef!, burgerRef!]);
 
   const router = useRouter();
   const currentRoute = router.pathname;
-  
+
   return (
     <>
       {isSmallScreen &&
         <div
-          ref={r => setSidebar(r)} 
+          ref={r => setSidebarRef(r)}
           className={
             cx(classes.sidebar, { [classes.sidebarActive]: opened === true })
           }
         >
-        {/* <div ref={sidebarRef} className={cx(classes.sidebar, { [classes.sidebarActive]: opened === true })}> */}
           <Sidebar
             handleClick={close}
             links={menuList}
@@ -56,13 +49,12 @@ export default function Header() {
       <header className={classes.root}>
         <div className={classes.leftContainer}>
           <Burger
-            ref={r => setBurger(r)}
+            ref={r => setBurgerRef(r)}
             opened={opened}
             onClick={toggle}
             className={classes.burger}
             size="sm"
           />
-          {/* <Burger ref={burgerRef} opened={opened} onClick={toggle} className={classes.burger} size="sm" /> */}
 
           <Link href="/" passHref>
             <a style={{
@@ -97,10 +89,10 @@ export default function Header() {
               <UserMenu />
               :
               <Link href="/signin" passHref>
-                <Button className={classes.signInButton}
+                <Button className={classes.signInButton}              
                   styles={(theme) => ({
                     label: {
-                      color: "black",
+                      color: "white",
                     },
                   })}
                 >

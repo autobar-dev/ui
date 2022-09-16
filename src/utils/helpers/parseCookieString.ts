@@ -1,5 +1,5 @@
 export default function parseCookieString(cookieString: string): any {
-  if (cookieString === "")
+  if (!cookieString)
       return {};
 
   let pairs = cookieString.split(";");

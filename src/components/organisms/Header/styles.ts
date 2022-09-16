@@ -2,6 +2,9 @@ import { createStyles } from "@mantine/core";
 
 export const useStyles = createStyles((theme, _params, getRef) => ({
   root: {
+    zIndex: 99,
+    position: "sticky",
+    top: 0,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -10,9 +13,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     paddingRight: "1rem",
     width: "100%",
     height: "60px",
-    borderBottom: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
-    }`,
+    borderBottom: `1px solid ${theme.colors.defaultGray[3]}`,
   },
 
   burger: {
@@ -55,10 +56,9 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     padding: "0.2rem 0.6rem",
     borderRadius: theme.radius.sm,
     textDecoration: "none",
-    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.colors.gray[7],
 
     "&:hover": {
-      backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
+      backgroundColor: theme.colors.defaultGray[4],
     },
   },
 
@@ -80,6 +80,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
   },
 
   sidebar: {
+    zIndex: 99,
     display: "flex",
     flexDirection: "column",
     position: "fixed",
@@ -89,11 +90,8 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     padding: "24px 16px",
     transition: "all 0.2s",
     minHeight: "calc(100vh - 60px)",
-    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
-    zIndex: 2,
-    borderRight: `1px solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
-    }`,
+    backgroundColor: theme.colors.defaultGray[5],
+    borderRight: `1px solid ${theme.colors.defaultGray[3]}`,
   },
 
   sidebarActive: {
