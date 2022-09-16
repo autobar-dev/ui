@@ -1,7 +1,7 @@
 import { createStyles } from "@mantine/core";
 
 export const useStyles = createStyles((theme, _params, getRef) => {
-  const icon = getRef("icon");
+  const iconRef = getRef("icon");
 
   return {
     menuItem: {
@@ -14,19 +14,19 @@ export const useStyles = createStyles((theme, _params, getRef) => {
       alignItems: "center",
       textDecoration: "none",
       fontSize: theme.fontSizes.sm,
-      color: theme.colorScheme === "dark" ? theme.white : theme.black,
+      color: theme.white,
       padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
       borderRadius: theme.radius.sm,
       fontWeight: 500,
 
       "&:hover": {
-        backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
+        backgroundColor: theme.colors.defaultGray[4],
       },
     },
 
     linkIcon: {
-      ref: icon,
-      color: theme.colorScheme === "dark" ? theme.white : theme.black,
+      ref: iconRef,
+      color: theme.white,
       marginRight: theme.spacing.sm,
     },
 

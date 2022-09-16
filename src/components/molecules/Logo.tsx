@@ -21,9 +21,7 @@ export default function Logo({ type = "logo-with-text", iconColor = "#f8f8f8", t
             color={iconColor}
             className={className}
             size={size}
-            style={{
-              ...style,
-            }}
+            style={style}
           />
       }
       {
@@ -32,9 +30,7 @@ export default function Logo({ type = "logo-with-text", iconColor = "#f8f8f8", t
             color={textColor}
             className={className}
             size={size}
-            style={{
-              ...style,
-            }}
+            style={style}
           />
       }
       {
@@ -44,9 +40,7 @@ export default function Logo({ type = "logo-with-text", iconColor = "#f8f8f8", t
             textColor={textColor}
             className={className}
             size={size}
-            style={{
-              ...style,
-            }}
+            style={style}
           />
       }
     </>

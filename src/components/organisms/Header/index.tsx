@@ -23,10 +23,10 @@ export default function Header() {
   const [opened, { close, toggle }] = useDisclosure(false);
   const isSmallScreen = useMediaQuery(theme.fn.smallerThan("sm").split("@media ")[1]);
 
-  const [sidebar, setSidebar] = useState<HTMLElement | null>(null);
-  const [burger, setBurger] = useState<HTMLElement | null>(null);
+  const [sidebarRef, setSidebarRef] = useState<HTMLElement | null>(null);
+  const [burgerRef, setBurgerRef] = useState<HTMLElement | null>(null);
 
-  useClickOutside(() => close(), null, [sidebar!, burger!]);
+  useClickOutside(() => close(), null, [sidebarRef!, burgerRef!]);
 
   const router = useRouter();
   const currentRoute = router.pathname;
@@ -35,7 +35,7 @@ export default function Header() {
     <>
       {isSmallScreen &&
         <div
-          ref={r => setSidebar(r)}
+          ref={r => setSidebarRef(r)}
           className={
             cx(classes.sidebar, { [classes.sidebarActive]: opened === true })
           }
@@ -49,7 +49,7 @@ export default function Header() {
       <header className={classes.root}>
         <div className={classes.leftContainer}>
           <Burger
-            ref={r => setBurger(r)}
+            ref={r => setBurgerRef(r)}
             opened={opened}
             onClick={toggle}
             className={classes.burger}
@@ -89,9 +89,7 @@ export default function Header() {
               <UserMenu />
               :
               <Link href="/signin" passHref>
-                <Button className={classes.signInButton}
-                  variant="gradient"
-                  gradient={{ from: theme.colors.brand[7], to: theme.colors.brand[8] }}
+                <Button className={classes.signInButton}              
                   styles={(theme) => ({
                     label: {
                       color: "white",
