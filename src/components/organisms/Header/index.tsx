@@ -23,30 +23,23 @@ export default function Header() {
   const [opened, { close, toggle }] = useDisclosure(false);
   const isSmallScreen = useMediaQuery(theme.fn.smallerThan("sm").split("@media ")[1]);
 
-  // const sidebarRef = useRef(null);
-  // const burgerRef = useRef(null);
-  // useClickOutside(() => close(), null, [sidebarRef.current!, burgerRef.current!]);
-
   const [sidebar, setSidebar] = useState<HTMLElement | null>(null);
   const [burger, setBurger] = useState<HTMLElement | null>(null);
-  
-  useClickOutside(() => close(), null, [sidebar!, burger!]);
 
-  // useClickOutside(() => close(), null, []);
+  useClickOutside(() => close(), null, [sidebar!, burger!]);
 
   const router = useRouter();
   const currentRoute = router.pathname;
-  
+
   return (
     <>
       {isSmallScreen &&
         <div
-          ref={r => setSidebar(r)} 
+          ref={r => setSidebar(r)}
           className={
             cx(classes.sidebar, { [classes.sidebarActive]: opened === true })
           }
         >
-        {/* <div ref={sidebarRef} className={cx(classes.sidebar, { [classes.sidebarActive]: opened === true })}> */}
           <Sidebar
             handleClick={close}
             links={menuList}
@@ -62,7 +55,6 @@ export default function Header() {
             className={classes.burger}
             size="sm"
           />
-          {/* <Burger ref={burgerRef} opened={opened} onClick={toggle} className={classes.burger} size="sm" /> */}
 
           <Link href="/" passHref>
             <a style={{
@@ -98,9 +90,11 @@ export default function Header() {
               :
               <Link href="/signin" passHref>
                 <Button className={classes.signInButton}
+                  variant="gradient"
+                  gradient={{ from: theme.colors.brand[7], to: theme.colors.brand[8] }}
                   styles={(theme) => ({
                     label: {
-                      color: "black",
+                      color: "white",
                     },
                   })}
                 >

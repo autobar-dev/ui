@@ -4,8 +4,8 @@ export const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
 
   return {
-    navbar: {
-      backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
+    menuItem: {
+      margin: "3px 0px 3px",
     },
 
     link: {

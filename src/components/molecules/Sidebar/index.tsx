@@ -17,12 +17,14 @@ export default function Sidebar({ handleClick, links }: SidebarActionProps) {
   return (
     <>
       {links.map((item) => (
-        <Link href={item.link} key={item.label} passHref>
-          <a onClick={() => handleClick()} className={cx(classes.link, { [classes.linkActive]: item.link === currentRoute })}>
-            <item.icon className={classes.linkIcon} stroke={1.5} />
-            <span>{item.label}</span>
-          </a>
-        </Link>
+        <div className={classes.menuItem} key={item.label}>
+          <Link href={item.link} passHref>
+            <a onClick={() => handleClick()} className={cx(classes.link, { [classes.linkActive]: item.link === currentRoute })}>
+              <item.icon className={classes.linkIcon} stroke={1.5} />
+              <span>{item.label}</span>
+            </a>
+          </Link>
+        </div>
       ))}
     </>
   );
