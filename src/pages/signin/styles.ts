@@ -8,7 +8,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     maxWidth: "550px",
     width: "90%",
     height: "auto",
-    border: "1px solid #303030",
+    border: `1px solid ${theme.colors.defaultGray[3]}`,
     borderRadius: "10px",
     alignItems: "stretch",
     padding: "0 40px",

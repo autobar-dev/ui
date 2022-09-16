@@ -9,9 +9,10 @@ type LogoProps = {
   textColor?: string;
   className?: string;
   style?: any;
+  size?: any;
 };
 
-export default function Logo({ type = "logo-with-text", iconColor = "#f8f8f8", textColor = "#f8f8f8", className, style }: LogoProps) {
+export default function Logo({ type = "logo-with-text", iconColor = "#f8f8f8", textColor = "#f8f8f8", className, style, size = "min-content" }: LogoProps) {
   return (
     <>
       {
@@ -19,10 +20,8 @@ export default function Logo({ type = "logo-with-text", iconColor = "#f8f8f8", t
           <LogoOnly
             color={iconColor}
             className={className}
-            style={{
-              height: "min-content",
-              ...style,
-            }}
+            size={size}
+            style={style}
           />
       }
       {
@@ -30,10 +29,8 @@ export default function Logo({ type = "logo-with-text", iconColor = "#f8f8f8", t
           <LogoText
             color={textColor}
             className={className}
-            style={{
-              height: "min-content",
-              ...style,
-            }}
+            size={size}
+            style={style}
           />
       }
       {
@@ -42,10 +39,8 @@ export default function Logo({ type = "logo-with-text", iconColor = "#f8f8f8", t
             iconColor={iconColor}
             textColor={textColor}
             className={className}
-            style={{
-              height: "min-content",
-              ...style,
-            }}
+            size={size}
+            style={style}
           />
       }
     </>

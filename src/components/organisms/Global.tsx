@@ -1,11 +1,11 @@
-import { Global as MantineGlobal} from "@mantine/core";
+import { Global as MantineGlobal } from "@mantine/core";
 
 export default function Global() {
   return (
     <MantineGlobal
-      styles={[
+      styles={(theme) => ({
         
-      ]}
+      })}
     />
   );
 }
