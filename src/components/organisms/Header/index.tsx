@@ -6,7 +6,7 @@ import UserContext from "../../../contexts/UserContext";
 import Logo from "../../molecules/Logo";
 import UserMenu from "../../molecules/UserMenu";
 import { useStyles } from "./styles";
-import { IconHome, IconBeer, IconMap2, IconMail, IconCircuitSwitchClosed } from '@tabler/icons';
+import { IconHome, IconBeer, IconMap2, IconMail } from '@tabler/icons';
 import Sidebar from "../../molecules/Sidebar";
 import { useRouter } from "next/router"
 
