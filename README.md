@@ -1,34 +1,68 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Autobar UI
 
-## Getting Started
+UI is the main website for Autobar.
 
-First, run the development server:
+## Setup
 
-```bash
-npm run dev
-# or
-yarn dev
+### Production
+
+To run what has been deployed to production clone the `main` branch and run it as described in the **Running** section.
+
+```
+git clone --branch main https://github.com/autobar-dev/ui.git
+
+npm install # INSTALL ALL DEPENDENCIES
+npm run build # BUILD APP
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+All features available on the testing environment and not yet deployed to production are on the `develop` branch.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```
+git clone --branch develop https://github.com/autobar-dev/ui.git
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+or, if you have already cloned the repo, simply run `git checkout develop`.
 
-## Learn More
+**Important:** before you start the app, remember to install all dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+```
+npm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Running
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Production
 
-## Deploy on Vercel
+On production you will most likely want to run UI in a Docker container:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+docker run
+  -p 4000:80
+  -e NEXT_PUBLIC_URL=... -e PORT=80
+  ghcr.io/autobar-dev/ui:main -d
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+But you can also run it as is after building:
+
+```
+npm start
+```
+
+### Development
+
+First make sure your `.env.development` file in the root directory contains the following field:
+
+- **NEXT_PUBLIC_URL** - URL pointing to a running Service instance (e.g. `https://api.autobar.ovh`; note the lack of `/` after the URL)
+- **PORT** - port to run the app on (can be omitted; defaults to 4000)
+
+You can find the most up-to-date configuration in the [docs](https://docs.autobar.ovh).
+
+Then, simply run
+
+```
+npm run dev
+```
+
+Now you should be able to access UI on `http://localhost:PORT`.
