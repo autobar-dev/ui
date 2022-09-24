@@ -6,29 +6,17 @@ import React, { useContext, useEffect, useMemo, useState } from 'react'
 import KeyIcon from '../../components/atoms/KeyIcon';
 import MessageIcon from '../../components/atoms/MessageIcon';
 import Logo from '../../components/molecules/Logo';
+import FirebaseContext from '../../contexts/FirebaseContext';
 import UserContext from '../../contexts/UserContext';
 import parseCookieString from '../../utils/helpers/parseCookieString';
+import {
+  getAuth,
+  setPersistence,
+  signInWithEmailAndPassword,
+  browserLocalPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 import { useStyles } from './styles';
-
-async function SendSignInRequest(email: string, password: string, rememberMe: boolean) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/signin`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
-
-  if(response.status == 200) {
-    return;
-  } else {
-    throw new Error(await response.text());
-  }
-}
 
 export default function SignInPage() {
   const { classes } = useStyles();
@@ -45,6 +33,41 @@ export default function SignInPage() {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  useEffect(() => {
+    const auth = getAuth();
+
+    if(auth.currentUser) {
+      flushUser()
+        .then(() => {
+          if(r && typeof r == "string") {
+            router.push(decodeURIComponent(r));
+          } else {
+            router.push("/");
+          }
+        })
+        .catch((e: any) => {
+          console.error(e);
+        });
+    }
+  }, []);
+
+  async function sendSignInRequest(email: string, password: string, rememberMe: boolean) {
+    const auth = getAuth();
+
+    try {
+      const statePersistence = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+
+      await setPersistence(auth, statePersistence);
+      const authResult = await signInWithEmailAndPassword(auth, email, password);
+
+      console.log(authResult);
+
+      return;
+    } catch(e) {
+      throw e;
+    }
+  }
 
   const handleSignInButtonClick = async () => {
     setEmailError("");
@@ -67,7 +90,7 @@ export default function SignInPage() {
       setLoading(true);
       
       try {
-        await SendSignInRequest(email, password, rememberMe);
+        await sendSignInRequest(email, password, rememberMe);
         await flushUser();
 
         if(r && typeof r == "string") {
@@ -160,41 +183,9 @@ export default function SignInPage() {
           }
         </Button>
         <Text size={'md'} className={classes.signUpText}>
-          Don't have an account yet? <Link href="/signup"><a>Sign Up</a></Link>
+          Don&apos;t have an account yet? <Link href="/signup"><a>Sign Up</a></Link>
         </Text>
       </div>
     </>
   )
-}
-
-export async function getServerSideProps(context: any) {
-  const { req, query } = context;
-
-  let redirectPath: string | undefined = undefined;
-  const cookies = parseCookieString(req.headers.cookie);
-
-  if(cookies.access_token) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/verify`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        access_token: cookies.access_token,
-      }),
-    });
-
-    if(response.status == 200) {
-      redirectPath = query.r || "/";
-    }
-  }
-
-  return {
-    redirect: redirectPath ? {
-      destination: redirectPath,
-      permanent: false,
-    } : undefined,
-    props: {},
-  };
 }

@@ -49,7 +49,7 @@ export default function ProductsPage({ products, productsError }: ProductsPagePr
                 })
               }
             </Carousel>
-           }        
+          }        
         </div>
       </Shell>
     </>

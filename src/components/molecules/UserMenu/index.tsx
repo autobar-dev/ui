@@ -1,22 +1,30 @@
 import { Avatar, Button, Menu } from "@mantine/core";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import UserContext from "../../../contexts/UserContext";
 import ProfileIcon from "../../atoms/ProfileIcon";
 import SignOutIcon from "../../atoms/SignOutIcon";
 import { useStyles } from "./styles";
+import { getAuth, signOut } from "firebase/auth";
 
 export default function UserMenu() {
   const { user, flushUser } = useContext(UserContext);
   const { classes } = useStyles();
 
-  const handleSignOutButtonClick = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/signout`, {
-      method: "POST",
-      credentials: "include",
-    });
+  const [signOutError, setSignOutError] = useState(false);
 
-    await flushUser();
+  const handleSignOutButtonClick = async () => {
+    const auth = getAuth();
+    
+    try {
+      await signOut(auth);
+      setSignOutError(false);
+
+      await flushUser();
+    } catch(e) {
+      console.error(e);
+      setSignOutError(true);
+    }
   };
 
   return (
@@ -60,7 +68,7 @@ export default function UserMenu() {
           className={classes.menuItem}
           icon={
             <SignOutIcon
-              color="#c1c2c5"
+              color={signOutError ? "#ef5050" : "#c1c2c5"}
               className={classes.menuItemIcon}
             />
           }

@@ -6,7 +6,12 @@ import UserContext from '../contexts/UserContext';
 import { useEffect, useState } from 'react';
 import User from '../types/User';
 import flushUserHelper from '../utils/helpers/flushUser';
+import { initializeApp } from 'firebase/app';
+import { getAnalytics } from "firebase/analytics";
 import { RouterTransition } from '../components/organisms/RouterTransition';
+import initializeFirebase from '../utils/helpers/initializeFirebase';
+import FirebaseContext from '../contexts/FirebaseContext';
+import { getAuth } from 'firebase/auth';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -14,10 +19,16 @@ export default function App(props: AppProps) {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [isUserLoading, setIsUserLoading] = useState(true);
   const flushUser = () => flushUserHelper(user, setUser, `${process.env.NEXT_PUBLIC_URL}/api/graphql`);
+  const [firebaseAppAndAnalytics, setFirebaseAppAndAnalytics] = useState<any | undefined>(undefined);
 
   // Flush user on first load
   useEffect(() => {
-    flushUser().then(() => {
+    setFirebaseAppAndAnalytics(initializeFirebase());
+
+    const auth = getAuth();
+
+    auth.onAuthStateChanged(async () => {
+      await flushUser();
       setIsUserLoading(false);
     });
   }, []);
@@ -55,17 +66,19 @@ export default function App(props: AppProps) {
       >
         <RouterTransition />
         <UserContext.Provider value={{ user, setUser, flushUser, }}>
-          <Global />
+          <FirebaseContext.Provider value={firebaseAppAndAnalytics}>
+            <Global />
 
-          {
-            isUserLoading ? (
-              <Center style={{ width: "100vw", height: "100vh" }}>
-                <Loader size={"xl"} />
-              </Center>              
-            )
-            :
-              <Component {...pageProps} />
-          }
+            {
+              isUserLoading ? (
+                <Center style={{ width: "100vw", height: "100vh" }}>
+                  <Loader size={"xl"} />
+                </Center>              
+              )
+              :
+                <Component {...pageProps} />
+            }
+          </FirebaseContext.Provider>
         </UserContext.Provider>
       </MantineProvider>
     </>
