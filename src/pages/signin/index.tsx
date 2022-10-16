@@ -160,7 +160,7 @@ export default function SignInPage() {
           }
         </Button>
         <Text size={'md'} className={classes.signUpText}>
-          Don't have an account yet? <Link href="/signup"><a>Sign Up</a></Link>
+          Don&apos;t have an account yet? <Link href="/signup"><a>Sign Up</a></Link>
         </Text>
       </div>
     </>

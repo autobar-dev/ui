@@ -9,6 +9,7 @@ export default () => gql`
       surname
       birthdate
       phoneNumber
+      profilePicture
       balance
       balanceCurrency
       verifiedAt
