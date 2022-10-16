@@ -1,6 +1,11 @@
 import express from "express";
 import next from "next";
 import { createProxyMiddleware } from "http-proxy-middleware";
+import { checkEnvVars } from "./utils/helpers/checkEnvVars";
+import dotenv from "dotenv";
+
+dotenv.config();
+checkEnvVars();
 
 const port = process.env.PORT || 4000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -9,7 +14,7 @@ const handle = app.getRequestHandler();
 
 const apiPaths = {
   '/api': {
-    target: 'http://localhost:4001', 
+    target: process.env.NEXT_PUBLIC_API_URL, 
     pathRewrite: {
       '^/api': '/'
     },

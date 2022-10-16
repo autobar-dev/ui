@@ -56,6 +56,8 @@ First make sure your `.env.development` file in the root directory contains the 
 
 - **NEXT_PUBLIC_URL** - URL pointing to a running Service instance (e.g. `https://api.autobar.ovh`; note the lack of `/` after the URL)
 - **PORT** - port to run the app on (can be omitted; defaults to 4000)
+- **NEXT_PUBLIC_BUCKET_URL** - B2 bucket URL 
+- **NEXT_PUBLIC_API_URL** - URL Autobar Service is being hosted on
 
 You can find the most up-to-date configuration in the [docs](https://docs.autobar.ovh).
 
