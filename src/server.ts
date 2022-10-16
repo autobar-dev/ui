@@ -4,13 +4,13 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 import { checkEnvVars } from "./utils/helpers/checkEnvVars";
 import dotenv from "dotenv";
 
+dotenv.config();
+checkEnvVars();
+
 const port = process.env.PORT || 4000;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
-
-dotenv.config();
-checkEnvVars();
 
 const apiPaths = {
   '/api': {
