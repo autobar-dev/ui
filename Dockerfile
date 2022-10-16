@@ -9,6 +9,7 @@ RUN npm install
 COPY . .
 
 ENV NODE_ENV="production"
+RUN npx next build
 RUN npm run build
 
 EXPOSE 3000

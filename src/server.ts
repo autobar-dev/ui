@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 checkEnvVars();
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
@@ -21,8 +21,6 @@ const apiPaths = {
     changeOrigin: true
   },
 }
-
-const isDevelopment = process.env.NODE_ENV !== 'production';
 
 app.prepare().then(() => {
   const server = express();

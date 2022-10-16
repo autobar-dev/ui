@@ -15,11 +15,12 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "jsx": "preserve",
-    "incremental": true,
     "rootDir": "src",
     "outDir": "dist",
+    "sourceMap": true,
     "isolatedModules": true,
-    "noEmit": false
+    "noEmit": true,
+    "incremental": true
   },
   "include": [
     "src/**/*.ts",
