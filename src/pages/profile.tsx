@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from 'react'
 import Head from 'next/head'
 import { Code, TextInput, Title } from '@mantine/core'
-import Shell from '../../components/organisms/Shell'
-import UserContext from '../../contexts/UserContext';
-import { TableOfContents } from '../../components/organisms/TableOfContents';
+import Shell from '../components/organisms/Shell'
+import UserContext from '../contexts/UserContext';
+import { TableOfContents } from '../components/organisms/TableOfContents';
 import { useRouter } from 'next/router';
-import ImageWithPicker from '../../components/molecules/ImageWithPicker';
-import { useStyles } from './styles';
+import ImageWithPicker from '../components/molecules/ImageWithPicker';
+import { useStyles } from '../pages_styles/profileStyles';
 
 export default function ProfilePage() {
   const { user } = useContext(UserContext);

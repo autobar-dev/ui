@@ -3,12 +3,12 @@ import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import KeyIcon from '../../components/atoms/KeyIcon';
-import MessageIcon from '../../components/atoms/MessageIcon';
-import Logo from '../../components/molecules/Logo';
-import UserContext from '../../contexts/UserContext';
-import parseCookieString from '../../utils/helpers/parseCookieString';
-import { useStyles } from './styles';
+import KeyIcon from '../components/atoms/KeyIcon';
+import MessageIcon from '../components/atoms/MessageIcon';
+import Logo from '../components/molecules/Logo';
+import UserContext from '../contexts/UserContext';
+import parseCookieString from '../utils/helpers/parseCookieString';
+import { useStyles } from '../pages_styles/signinStyles';
 
 async function SendSignInRequest(email: string, password: string, rememberMe: boolean) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/signin`, {
