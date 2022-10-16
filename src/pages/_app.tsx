@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Center, Loader, LoadingOverlay, MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from "@mantine/notifications";
 import Global from '../components/organisms/Global';
 import UserContext from '../contexts/UserContext';
 import { useEffect, useState } from 'react';
@@ -53,20 +54,25 @@ export default function App(props: AppProps) {
           },
         }}
       >
-        <RouterTransition />
-        <UserContext.Provider value={{ user, setUser, flushUser, }}>
-          <Global />
+        <NotificationsProvider
+          autoClose={5000}
+          position={"bottom-right"}
+        >
+          <RouterTransition />
+          <UserContext.Provider value={{ user, setUser, flushUser, }}>
+            <Global />
 
-          {
-            isUserLoading ? (
-              <Center style={{ width: "100vw", height: "100vh" }}>
-                <Loader size={"xl"} />
-              </Center>              
-            )
-            :
-              <Component {...pageProps} />
-          }
-        </UserContext.Provider>
+            {
+              isUserLoading ? (
+                <Center style={{ width: "100vw", height: "100vh" }}>
+                  <Loader size={"xl"} />
+                </Center>              
+              )
+              :
+                <Component {...pageProps} />
+            }
+          </UserContext.Provider>
+        </NotificationsProvider>
       </MantineProvider>
     </>
   );

@@ -34,9 +34,8 @@ export default function UserMenu() {
           variant={"filled"}
           radius={"xl"}
           className={classes.userAvatar}
-        >
-          { user!.name.charAt(0) + user!.surname.charAt(0) }
-        </Avatar>
+          src={user?.profilePicture ? `${process.env.NEXT_PUBLIC_BUCKET_URL}/${user.profilePicture}` : undefined}
+        />
       </Menu.Target>
 
       <Menu.Dropdown>

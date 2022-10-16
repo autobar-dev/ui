@@ -14,9 +14,6 @@ export default function HomePage() {
       </Head>
       <Shell>
         <Title>Home Page</Title>
-        <Code>
-          { JSON.stringify(user, null, 2) }
-        </Code>
       </Shell>
     </>
   )
