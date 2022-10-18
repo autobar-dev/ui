@@ -11,6 +11,6 @@ COPY . .
 ENV NODE_ENV="production"
 RUN npx next build
 RUN npm run build
+RUN chmod +x ./entrypoint.sh
 
-EXPOSE 3000
 ENTRYPOINT [ "./entrypoint.sh" ]
