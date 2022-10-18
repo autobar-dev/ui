@@ -2,7 +2,7 @@ import { DocumentNode, responsePathAsArray } from "graphql";
 import { getServiceUri } from "./getServiceUri";
 
 export async function sendGraphQL(query: DocumentNode, url?: string): Promise<any> {
-  let gqlUrl = url || `${getServiceUri()}/graphql`;
+  let gqlUrl = url || `${process.env.NEXT_PUBLIC_URL}/api/graphql`;
 
   if(query && query.loc) {
     const body = query.loc?.source.body;
