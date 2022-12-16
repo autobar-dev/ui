@@ -10,9 +10,8 @@ export default (params: ProductQueryParams) => gql`
       id
       name
       description
-      type
       image
-      prices
+      type
       additionalData
       createdAt
     }

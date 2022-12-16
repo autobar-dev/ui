@@ -6,9 +6,8 @@ export default () => gql`
       id
       name
       description
-      type
       image
-      prices
+      type
       additionalData
       createdAt
     }

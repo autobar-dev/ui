@@ -33,7 +33,6 @@ export default () => gql`
           image
           type
           additionalData
-          prices
           createdAt
         }
       }

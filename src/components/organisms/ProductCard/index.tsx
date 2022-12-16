@@ -9,7 +9,7 @@ type ProductCardProps = {
 export default function ProductCard({ product }: ProductCardProps) {
   const { classes } = useStyles();
 
-  const prices = JSON.parse(product.prices);
+  const additionalData = JSON.parse(product.additionalData);
 
   return (
     <Link href={`/products/${product.id}`}>
@@ -25,9 +25,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             <li>{product.type}</li>
             <li>Prices
               <ul>
-                { Object.keys(prices).map((currency: string, index: number) => {
+                { Object.keys(additionalData).map((key: string) => {
                   return (
-                    <li key={`price-${product.id}-${currency}`}>{ currency }: { prices[currency] }</li>
+                    <li key={`add-data-${product.id}-${key}`}>{ key }: { additionalData[key] }</li>
                   );
                 }) }
               </ul>
