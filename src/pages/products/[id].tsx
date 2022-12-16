@@ -13,11 +13,9 @@ type ProductPagePropsType = {
 
 export default function ProductPage({ product, productError }: ProductPagePropsType) {
   let additionalData: any;
-  let prices: any;
 
   if(!productError) {
     additionalData = JSON.parse(product.additionalData);
-    prices = JSON.parse(product.prices);
   }
 
   return (
@@ -44,15 +42,6 @@ export default function ProductPage({ product, productError }: ProductPagePropsT
                   <li>{product.name}</li>
                   <li>{product.description}</li>
                   <li>{product.type}</li>
-                  <li>Prices:
-                    <ul>
-                      { Object.keys(prices).map((currency: string, index: number) => {
-                        return (
-                          <li key={`price-${product.id}-${currency}`}>{ currency }: { prices[currency] }</li>
-                        );
-                      }) }
-                    </ul>
-                  </li>
                   <li>Additional data:
                     <ul>
                       { Object.keys(additionalData).map((key: string, index: number) => {
