@@ -3,7 +3,9 @@ type Product = {
 
   name: string;
   description?: string;
+  slug: string;
   image?: string;
+  style: string;
   type: string;
   additionalData?: string;
 

@@ -13,17 +13,23 @@ export default (params: ProductsQueryParams) => gql`
   query {
     products(
       query: "${params.query ?? ""}",
-      sortBy: "${params.sortBy ?? "PURCHASES_ASCENDING"}",
+      sortBy: "${params.sortBy ?? "PURCHASES_DESCENDING"}",
       take: ${params.take ?? 10},
       skip: ${params.skip ?? 0},
     ) {
-      id
-      name
-      description
-      image
-      type
-      additionalData
-      createdAt
+      products {
+        id
+        name
+        description
+        slug
+        image
+        type
+        style
+        additionalData
+        createdAt
+      }
+      
+      total
     }
   }
 `;

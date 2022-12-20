@@ -2,6 +2,7 @@ import { useState } from "react";
 import Product from "../../../types/Product";
 import { useStyles } from "./styles";
 import { IconChevronUp, IconChevronDown } from "@tabler/icons";
+import Link from "next/link";
 
 type ProductsTableRowProps = {
   product: Product;
@@ -28,8 +29,15 @@ export default function ProductsTableRow({ product, style, onClick, expanded }: 
             src={product.image}
           />
           <div className={classes.beerNameAndTypeWrapper}>
-            <span className={classes.beerName}>{product.name}</span>
-            <span className={classes.beerType}>{"IPA"}</span>
+            <Link
+              href={`/products/${product.slug}`}
+              passHref
+            >
+              <a className={classes.beerNameLink}>
+                <span className={classes.beerName}>{product.name}</span>
+              </a>
+            </Link>
+            <span className={classes.beerType}>{product.style}</span>
           </div>
         </div>
         {
@@ -43,7 +51,9 @@ export default function ProductsTableRow({ product, style, onClick, expanded }: 
       {
         expanded && (
           <div className={classes.details}>
-
+            <p className={classes.beerDescription}>
+              {product.description}
+            </p>
           </div>
         )
       }

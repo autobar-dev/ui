@@ -37,6 +37,7 @@ export default () => gql`
           description
           image
           type
+          style
           additionalData
           createdAt
         }

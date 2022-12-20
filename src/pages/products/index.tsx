@@ -7,18 +7,20 @@ import { IconSearch } from "@tabler/icons";
 
 import ProductsQuery, { ProductsQuerySortBy } from "../../graphql/ProductsQuery";
 import ProductsList from '../../components/organisms/ProductsList';
-import { Button, Loader, TextInput } from '@mantine/core';
+import { Button, Loader, Pagination, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import Product from '../../types/Product';
 
 const defaultSearchData = {
   query: "",
   sortBy: "PURCHASES_DESCENDING",
-  take: 10,
+  take: 5,
   skip: 0,
 };
 
 type ProductsPagePropsType = {
-  products: any[],
+  products: Product[],
+  totalProducts: number,
   productsError: boolean,
   searchData: {
     query: string,
@@ -30,6 +32,7 @@ type ProductsPagePropsType = {
 
 export default function ProductsPage({
   products: productsSsr,
+  totalProducts: totalProductsSsr,
   productsError: productsErrorSsr,
   searchData: searchDataSsr,
 }: ProductsPagePropsType) {
@@ -38,51 +41,74 @@ export default function ProductsPage({
   const isSmallScreen = useMediaQuery(theme.fn.smallerThan("sm").split("@media ")[1]);
 
   const [products, setProducts] = useState(productsSsr);
+  const [totalProducts, setTotalProducts] = useState(totalProductsSsr);
   const [productsError, setProductsError] = useState(productsErrorSsr);
   const [isProductsLoading, setIsProductsLoading] = useState(false);
+
+  const [isAfterSsr, setIsAfterSsr] = useState(false);
 
   const [query, setQuery] = useState(searchDataSsr.query);
   const [sortBy, setSortBy] = useState(searchDataSsr.sortBy);
   const [take, setTake] = useState(searchDataSsr.take);
   const [skip, setSkip] = useState(searchDataSsr.skip);
+  const [activePage, setActivePage] = useState(1);
 
   const [searchInputValue, setSearchInputValue] = useState(searchDataSsr.query);
 
+  const [totalPages, setTotalPages] = useState(totalProductsSsr / searchDataSsr.take);
+
   useEffect(() => {
-    const url = new URL(window.location as any);
+    setTotalPages(
+      Math.ceil(totalProducts / take)
+    );
+  }, [totalProducts, take]);
 
-    if(query != defaultSearchData.query) {
-      url.searchParams.set('query', query);
-    } else {
-      url.searchParams.delete('query');
-    }
+  useEffect(() => {
+    setActivePage(
+      Math.floor(skip / take) + 1
+    );
 
-    if(sortBy != defaultSearchData.sortBy) {
-      url.searchParams.set('sortBy', sortBy);
+    if(isAfterSsr) {
+      triggerSearch();
     } else {
-      url.searchParams.delete('sortBy');
+      setIsAfterSsr(true);
     }
+  }, [take, skip]);
+
+  // useEffect(() => {
+  //   const url = new URL(window.location as any);
+
+  //   if(query != defaultSearchData.query) {
+  //     url.searchParams.set('query', query);
+  //   } else {
+  //     url.searchParams.delete('query');
+  //   }
+
+  //   if(sortBy != defaultSearchData.sortBy) {
+  //     url.searchParams.set('sortBy', sortBy);
+  //   } else {
+  //     url.searchParams.delete('sortBy');
+  //   }
     
-    if(take != defaultSearchData.take) {
-      url.searchParams.set('take', take.toString());
-    } else {
-      url.searchParams.delete('take');
-    }
+  //   if(take != defaultSearchData.take) {
+  //     url.searchParams.set('take', take.toString());
+  //   } else {
+  //     url.searchParams.delete('take');
+  //   }
     
-    if(skip != defaultSearchData.skip) {
-      url.searchParams.set('skip', skip.toString());
-    } else {
-      url.searchParams.delete('skip');
-    }
+  //   if(skip != defaultSearchData.skip) {
+  //     url.searchParams.set('skip', skip.toString());
+  //   } else {
+  //     url.searchParams.delete('skip');
+  //   }
 
-    window.history.pushState(null, '', url.toString());
-  }, [query, sortBy, take, skip]);
+  //   window.history.pushState(null, '', url.toString());
+  // }, [query, sortBy, take, skip]);
 
-  async function handleSearchButtonClick() {
-    console.log("searchInputValue", searchInputValue);
-
+  async function triggerSearch() {
     setQuery(searchInputValue);
     setIsProductsLoading(true);
+    setProductsError(false);
 
     try {
       const data = await sendGraphQL(ProductsQuery({
@@ -92,7 +118,10 @@ export default function ProductsPage({
         skip,
       }));
 
-      setProducts(data.products);
+      const { products, total } = data.products;
+        
+      setProducts(products);
+      setTotalProducts(total);
     } catch(e) {
       console.log(e);
       setProductsError(true);
@@ -110,53 +139,65 @@ export default function ProductsPage({
         <div className={classes.root}>
           <div className={classes.searchWrapper}>
             <TextInput
-              // label="Search"
               className={classes.searchInput}
               placeholder={"What beer's on your mind?"}
               size={'lg'}
-              // disabled={loading}
               value={searchInputValue}
               onChange={(e) => setSearchInputValue(e.target.value)}
               error={productsError}
               onKeyUp={(e) => {
                 if(e.key === "Enter") {
-                  handleSearchButtonClick();
+                  triggerSearch();
                 }
               }}
-              // icon={
-              //   <MessageIcon
-              //     className={classes.inputIcon}
-              //     color="#f8f8f8"
-              //   />
-              // }
             />
             <Button
               className={classes.searchButton}
               size={'lg'}
-              disabled={isProductsLoading}
-              onClick={handleSearchButtonClick}
+              onClick={triggerSearch}
             >
               {
-                isProductsLoading ? (
-                  <Loader size={'sm'} />
-                ) : (
-                  isSmallScreen ? (
-                    <IconSearch size={20} />
-                  ) :
-                    "Search"
-                )
+                isSmallScreen ? (
+                  <IconSearch size={20} />
+                ) : "Search"
               }
             </Button>
           </div>
           {
-            productsError && (
-              <h1>There has been an error.</h1>
+            (productsError || isProductsLoading) && (
+              <div className={classes.stateOtherThanSuccessContainer}>
+                {
+                  productsError && (
+                    <h1>There has been an error.</h1>
+                  )
+                }
+                {
+                  isProductsLoading && (
+                    <Loader size={'lg'} />
+                  )
+                }
+              </div>
             )
           }
-          { !productsError &&
+          { (!productsError && !isProductsLoading) &&
             <ProductsList
               products={products}
             />
+          }
+          {
+            !productsError && (
+              <Pagination
+                className={classes.pagination}
+                position={"center"}
+                total={totalPages}
+                page={activePage}
+                onChange={
+                  (newPage) => {
+                    setSkip((newPage - 1) * take);
+                  }
+                }
+              />
+            )
           }
         </div>
       </Shell>
@@ -167,30 +208,37 @@ export default function ProductsPage({
 export async function getServerSideProps(context: any): Promise<any | { props: ProductsPagePropsType }> {
   let productsError = false;
   let products = [];
+  let totalProducts = 0;
 
   const { req } = context;
   const { query: urlQuery } = req;
   const { query, sortBy, take, skip } = urlQuery;
 
   const searchData = {
-    query: query || "",
-    sortBy: sortBy || "PURCHASES_DESCENDING",
-    take: take || 10,
-    skip: skip || 0,
+    query: query || defaultSearchData.query,
+    sortBy: sortBy || defaultSearchData.sortBy,
+    take: take || defaultSearchData.take,
+    skip: skip || defaultSearchData.skip,
   };
 
   try {
-    products = (await sendGraphQL(ProductsQuery(searchData))).products;
+    const result = (await sendGraphQL(ProductsQuery(searchData)));
+
+    products = result.products.products;
+    totalProducts = result.products.total;
   } catch(e) {
     console.log(e);
     productsError = true;
   }
 
+  const ssrData: ProductsPagePropsType = {
+    products,
+    totalProducts, 
+    productsError,
+    searchData,
+  };
+
   return {
-    props: {
-      products,
-      productsError,
-      searchData,
-    },
+    props: ssrData,
   };
 }

@@ -36,6 +36,13 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     justifyContent: "center",
     alignContent: "start",
   },
+  beerNameLink: {
+    color: "#C1C2C5",
+
+    ["&:hover"]: {
+      textDecorationThickness: "2px",
+    },
+  },
   beerName: {
     fontSize: "20px",
     fontWeight: "bold",
@@ -45,8 +52,23 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
   },
   details: {
     width: "100%",
-    height: "250px",
-    backgroundColor: "blue",
+    height: "auto",
     marginTop: "30px",
+    position: "relative",
+
+    ["&::before"]: {
+      content: "''",
+      display: "inline-block",
+      width: "40%",
+      height: "2px",
+      backgroundColor: "#303030",
+      position: "absolute",
+      top: "-10px",
+      left: "50%",
+      transform: "translateX(-50%)",
+    },
+  },
+  beerDescription: {
+    fontSize: "16px",
   },
 }));

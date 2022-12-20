@@ -26,5 +26,13 @@ export const useStyles = createStyles((theme) => ({
   searchButton: {
     marginLeft: "15px",
   },
+  stateOtherThanSuccessContainer: {
+    marginTop: "50px",
+    display: "flex",
+    justifyContent: "center",
+  },
+  pagination: {
+    marginTop: "30px",
+  },
 }));
 
