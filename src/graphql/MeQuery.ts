@@ -14,24 +14,30 @@ export default () => gql`
       balanceCurrency
       verifiedAt
       createdAt
+
       transactions {
         id
         value
         currency
         createdAt
       }
+
       purchases {
         id
         amount
-        price
+        paid
         currency
-        createdAt
+        active
+        startedAt
+        finishedAt
+        
         product {
           id
           name
           description
           image
           type
+          style
           additionalData
           createdAt
         }

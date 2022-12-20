@@ -42,6 +42,7 @@ export default function ProductPage({ product, productError }: ProductPagePropsT
                   <li>{product.name}</li>
                   <li>{product.description}</li>
                   <li>{product.type}</li>
+                  <li>{product.style}</li>
                   <li>Additional data:
                     <ul>
                       { Object.keys(additionalData).map((key: string, index: number) => {
@@ -68,8 +69,12 @@ export async function getServerSideProps(context: any): Promise<any | { props: P
 
   try {
     product = (await sendGraphQL(ProductQuery({
-      id: context.query.id,
+      slug: context.query.slug,
     }))).product;
+
+    if(!product) {
+      throw new Error("Product not found");
+    }
   } catch(e) {
     console.log(e);
     productError = true;
