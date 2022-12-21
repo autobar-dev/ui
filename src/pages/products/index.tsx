@@ -3,13 +3,14 @@ import Shell from '../../components/organisms/Shell'
 import { sendGraphQL } from '../../utils/helpers/sendGraphQL';
 import Head from 'next/head';
 import { useStyles } from "../../pages_styles/products/productsStyles";
-import { IconSearch } from "@tabler/icons";
+import { IconFilter, IconSearch } from "@tabler/icons";
 
 import ProductsQuery, { ProductsQuerySortBy } from "../../graphql/ProductsQuery";
 import ProductsList from '../../components/organisms/ProductsList';
 import { Button, Loader, Pagination, TextInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import Product from '../../types/Product';
+import SortingFilteringModal from '../../components/molecules/SortingFilteringModal';
 
 const defaultSearchData = {
   query: "",
@@ -30,6 +31,8 @@ type ProductsPagePropsType = {
   },
 };
 
+export type SortingOption = "PURCHASES_DESCENDING" | "PURCHASES_ASCENDING";
+
 export default function ProductsPage({
   products: productsSsr,
   totalProducts: totalProductsSsr,
@@ -48,7 +51,7 @@ export default function ProductsPage({
   const [isAfterSsr, setIsAfterSsr] = useState(false);
 
   const [query, setQuery] = useState(searchDataSsr.query);
-  const [sortBy, setSortBy] = useState(searchDataSsr.sortBy);
+  const [sortBy, setSortBy] = useState<SortingOption>(searchDataSsr.sortBy as SortingOption);
   const [take, setTake] = useState(searchDataSsr.take);
   const [skip, setSkip] = useState(searchDataSsr.skip);
   const [activePage, setActivePage] = useState(1);
@@ -56,6 +59,7 @@ export default function ProductsPage({
   const [searchInputValue, setSearchInputValue] = useState(searchDataSsr.query);
 
   const [totalPages, setTotalPages] = useState(totalProductsSsr / searchDataSsr.take);
+  const [sortingFilteringModalOpened, setSortingFilteringModalOpened] = useState(false);
 
   useEffect(() => {
     setTotalPages(
@@ -73,7 +77,7 @@ export default function ProductsPage({
     } else {
       setIsAfterSsr(true);
     }
-  }, [take, skip]);
+  }, [take, skip, sortBy]);
 
   // useEffect(() => {
   //   const url = new URL(window.location as any);
@@ -136,6 +140,17 @@ export default function ProductsPage({
         <title>Products | Autobar</title>
       </Head>
       <Shell>
+        <SortingFilteringModal
+          opened={sortingFilteringModalOpened}
+          sortBy={sortBy}
+          onClose={() => setSortingFilteringModalOpened(false)}
+          onClear={() => {
+            setSortBy(defaultSearchData.sortBy as SortingOption);
+          }}
+          onSubmit={(newSortBy) => {
+            setSortBy(newSortBy);
+          }}
+        />
         <div className={classes.root}>
           <div className={classes.searchWrapper}>
             <TextInput
@@ -150,6 +165,13 @@ export default function ProductsPage({
                   triggerSearch();
                 }
               }}
+              rightSection={
+                <IconFilter
+                  className={classes.filteringSortingButton}
+                  size={22}
+                  onClick={() => setSortingFilteringModalOpened(true)}
+                />
+              }
             />
             <Button
               className={classes.searchButton}

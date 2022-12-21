@@ -14,6 +14,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     width: "100%",
     height: "60px",
     borderBottom: `1px solid ${theme.colors.defaultGray[3]}`,
+    backgroundColor: "#1A1B1E",
   },
 
   burger: {

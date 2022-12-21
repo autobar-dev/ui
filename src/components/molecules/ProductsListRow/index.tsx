@@ -40,13 +40,15 @@ export default function ProductsTableRow({ product, style, onClick, expanded }: 
             <span className={classes.beerType}>{product.style}</span>
           </div>
         </div>
-        {
-          expanded ? (
-            <IconChevronUp size={32} />
-          ) : (
-            <IconChevronDown size={32} />
-          )
-        }
+        <div className={classes.chevron}>
+          {
+            expanded ? (
+              <IconChevronUp size={32} />
+            ) : (
+              <IconChevronDown size={32} />
+            )
+          }
+        </div>
       </div>
       {
         expanded && (
