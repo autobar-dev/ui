@@ -23,6 +23,10 @@ export const useStyles = createStyles((theme) => ({
   searchInput: {
     flex: 1,
   },
+  filteringSortingButton: {
+    marginRight: "10px",
+    cursor: "pointer",
+  },
   searchButton: {
     marginLeft: "15px",
   },

@@ -12,6 +12,10 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     ["&:hover"]: {
       backgroundColor: "#ffffff08",
     },
+
+    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+      padding: "20px 15px",
+    },
   },
   banner: {
     width: "100%",
@@ -23,6 +27,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
   beerInfoWrapper: {
     display: "flex",
     flexDirection: "row",
+    alignItems: "center",
   },
   image: {
     width: "80px",
@@ -35,6 +40,10 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     marginLeft: "25px",
     justifyContent: "center",
     alignContent: "start",
+
+    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+      marginLeft: "15px",
+    },
   },
   beerNameLink: {
     color: "#C1C2C5",
@@ -46,9 +55,20 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
   beerName: {
     fontSize: "20px",
     fontWeight: "bold",
+
+    [`@media (max-width: ${theme.breakpoints.xs}px)`]: {
+      fontSize: "18px",
+    },
   },
   beerType: {
     fontSize: "18px",
+
+    [`@media (max-width: ${theme.breakpoints.xs}px)`]: {
+      fontSize: "16px",
+    },
+  },
+  chevron: {
+    marginLeft: "20px",
   },
   details: {
     width: "100%",
