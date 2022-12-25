@@ -7,5 +7,7 @@ export function checkEnvVars() {
     throw new Error('NEXT_PUBLIC_API_URL must be set');
   } else if(!process.env.NEXT_PUBLIC_BUCKET_URL) {
     throw new Error('NEXT_PUBLIC_BUCKET_URL must be set');
+  } else if(!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY) {
+    throw new Error('NEXT_PUBLIC_STRIPE_PUBLIC_KEY must be set');
   }
 }

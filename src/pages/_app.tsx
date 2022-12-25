@@ -40,7 +40,7 @@ export default function App(props: AppProps) {
             // highlights on hover:   #25262B or theme.colors.defaultGrey[4]
             // background:            #1A1B1E or theme.colors.defaultGrey[5]
             defaultGray: ["#F8F8F8", "#C1C2C5", "#626262", "#303030", "#25262B", "#1a1b1e", "#181818", "#040404", "#020202", "#010101"],
-            brand: ["#087f5b", "#0b7285", "#1864ab", "#364fc7", "#5f3dc4", "#862e9c", "#a61e4d", "#c92a2a", "#e3b04b", "#e7bb65"],
+            brand: ["#087f5b", "#0b7285", "#1864ab", "#364fc7", "#5f3dc4", "#e3b04b", "#a61e4d", "#c92a2a", "#e3b04b", "#e7bb65"],
           },
           primaryColor: "brand",
           defaultRadius: "10px",
