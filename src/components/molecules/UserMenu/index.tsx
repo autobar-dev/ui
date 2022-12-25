@@ -1,4 +1,5 @@
 import { Avatar, Button, Menu } from "@mantine/core";
+import { IconCash, IconWallet } from "@tabler/icons";
 import Link from "next/link";
 import { useContext } from "react";
 import UserContext from "../../../contexts/UserContext";
@@ -39,6 +40,25 @@ export default function UserMenu() {
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Link href="/topup" passHref>
+          <Menu.Item
+            component="a"
+            className={classes.menuItem}
+            icon={
+              <IconWallet
+                size={20}
+                color="#c1c2c5"
+                className={classes.menuItemIcon}
+                style={{
+                  marginRight: "1px",
+                }}
+              />
+            }
+          >
+            Balance: {user?.balance} <i>{user?.balanceCurrency}</i>
+          </Menu.Item>
+        </Link>
+        <Menu.Divider />
         <Link href="/profile" passHref>
           <Menu.Item
             component="a"
@@ -47,10 +67,31 @@ export default function UserMenu() {
               <ProfileIcon
                 color="#c1c2c5"
                 className={classes.menuItemIcon}
+                style={{
+                  width: "14px",
+                }}
               />
             }
           >
             Profile
+          </Menu.Item>
+        </Link>
+        <Link href="/transactions" passHref>
+          <Menu.Item
+            component="a"
+            className={classes.menuItem}
+            icon={
+              <IconCash
+                size={20}
+                color="#c1c2c5"
+                className={classes.menuItemIcon}
+                style={{
+                  marginRight: "1px",
+                }}
+              />
+            }
+          >
+            Transactions
           </Menu.Item>
         </Link>
         <Menu.Divider />
@@ -61,6 +102,9 @@ export default function UserMenu() {
             <SignOutIcon
               color="#c1c2c5"
               className={classes.menuItemIcon}
+              style={{
+                width: "14px",
+              }}
             />
           }
         >
@@ -70,7 +114,3 @@ export default function UserMenu() {
     </Menu>
   );
 }
-
-/* <Button
-        onClick={() => userContext.flushUser()}
-      >Flush</Button> */

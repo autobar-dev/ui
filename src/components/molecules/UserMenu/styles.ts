@@ -8,7 +8,6 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     fontWeight: 400,
   },
   menuItemIcon: {
-    width: "14px",
     marginRight: "6px",
   },
 }));

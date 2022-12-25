@@ -17,9 +17,12 @@ export default () => gql`
 
       transactions {
         id
-        value
+        amount
         currency
+        paymentId
+        status
         createdAt
+        updatedAt
       }
 
       purchases {
