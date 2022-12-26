@@ -24,9 +24,14 @@ export default function TransactionsPage() {
   useEffect(() => {
     if(user) {
       setTransactionList(
-        user.transactions.sort((a: Transaction, b: Transaction) => {
-          return (b.updatedAt || b.createdAt).getTime() - (a.updatedAt || a.createdAt).getTime();
-        })
+        user.transactions
+          .sort((a: Transaction, b: Transaction) => {
+            const aLastDate = new Date(a.updatedAt ?? a.createdAt);
+            const bLastDate = new Date(b.updatedAt ?? b.createdAt);
+
+            return bLastDate.getTime() - aLastDate.getTime();
+          })
+          .filter((item: Transaction) => item.status !== "CREATED")
       );
     }
   }, []);
@@ -41,7 +46,6 @@ export default function TransactionsPage() {
           <Table>
             <thead>
               <tr>
-                <th>Payment ID</th>
                 <th>Amount</th>
                 <th>Currency</th>
                 <th>Status</th>
@@ -52,7 +56,6 @@ export default function TransactionsPage() {
               {
                 transactionList.map((transaction, index) => (
                   <tr key={index}>
-                    <td>{transaction.paymentId}</td>
                     <td>{transaction.amount}</td>
                     <td>{transaction.currency}</td>
                     <td>{transaction.status}</td>
