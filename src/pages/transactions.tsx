@@ -5,10 +5,11 @@ import UserContext from '../contexts/UserContext';
 import { useRouter } from 'next/router';
 import { useStyles } from '../pages_styles/transactionsStyles';
 import { Transaction } from '../types/Transaction';
-import { Table } from '@mantine/core';
+import { Badge, Table } from '@mantine/core';
+import { IconCheck } from '@tabler/icons';
 
 export default function TransactionsPage() {
-  const { classes } = useStyles();
+  const { classes, theme } = useStyles();
 
   const { user } = useContext(UserContext);
   const router = useRouter();
@@ -58,7 +59,44 @@ export default function TransactionsPage() {
                   <tr key={index}>
                     <td>{transaction.amount}</td>
                     <td>{transaction.currency}</td>
-                    <td>{transaction.status}</td>
+                    <td>
+                      {
+                        transaction.status === "SUCCEEDED" && (
+                          <Badge
+                            color="green"
+                            variant="light"
+                            radius={"sm"}
+                          >Successful</Badge>
+                        )
+                      }
+                      {
+                        transaction.status === "FAILED" && (
+                          <Badge
+                            color="red"
+                            variant="light"
+                            radius={"sm"}
+                          >Failed</Badge>
+                        )
+                      }
+                      {
+                        transaction.status === "CANCELLED" && (
+                          <Badge
+                            color={"indigo"}
+                            variant="light"
+                            radius={"sm"}
+                          >Cancelled</Badge>
+                        )
+                      }
+                      {
+                        transaction.status === "REQUIRES_ACTION" && (
+                          <Badge
+                            color={"yellow"}
+                            variant="light"
+                            radius={"sm"}
+                          >Requires action</Badge>
+                        )
+                      }
+                    </td>
                     <td>
                       {
                         (transaction.updatedAt || transaction.createdAt).toLocaleString()

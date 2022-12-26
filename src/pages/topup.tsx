@@ -103,6 +103,8 @@ export default function ProfilePage() {
 
       setClientSecret(client_secret);
       setPaymentId(id);
+
+      console.log("paymentId",  id);
     } catch (error) {
       showNotification({
         title: "Error",
@@ -199,6 +201,7 @@ export default function ProfilePage() {
                   <Elements options={elementsOptions} stripe={stripeInstance}>
                     <PaymentForm
                       clientSecret={clientSecret}
+                      paymentId={paymentId}
                     />
                   </Elements>
                 </div>

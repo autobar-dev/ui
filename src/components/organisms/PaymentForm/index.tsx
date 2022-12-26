@@ -1,6 +1,6 @@
 import { Button, Loader } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
-import { LinkAuthenticationElement, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { StripePaymentElementOptions } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import { getRandomString } from "../../../utils/helpers/getRandomString";
@@ -8,6 +8,7 @@ import { useStyles } from "./styles";
 
 type PaymentFormProps = {
   clientSecret: string;
+  paymentId: string;
 };
 
 export default function PaymentForm(props: PaymentFormProps) {
@@ -20,6 +21,7 @@ export default function PaymentForm(props: PaymentFormProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [loadingNotificationId, setLoadingNotificationId] = useState<string | null>(null);
+  const [fetchPaymentStatusInterval, setFetchPaymentStatusInterval] = useState<number>();
 
   useEffect(() => {
     if(!stripe || !elements) {
@@ -53,7 +55,7 @@ export default function PaymentForm(props: PaymentFormProps) {
 
             notificationToShow = {
               id: notificationId,
-              color: "yellow",
+              color: "brand",
               title: "Processing",
               message: "Payment is being processed...",
               loading: true,
@@ -100,25 +102,63 @@ export default function PaymentForm(props: PaymentFormProps) {
       confirmParams: {
         return_url: `${process.env.NEXT_PUBLIC_URL}/`,
       },
+      redirect: "if_required",
     });
 
-    if (error.type === "card_error" || error.type === "validation_error") {
-      showNotification({
-        color: "brand",
-        title: "Error",
-        message: error.message,
-        autoClose: false,
-        loading: false,
-      });
-    } else {
-      showNotification({
-        color: "red",
-        title: "Error",
-        message: "An unexpected error occurred.",
-      });
+    if(error) {
+      if (error.type === "card_error" || error.type === "validation_error") {
+        showNotification({
+          color: "brand",
+          title: "Error",
+          message: error.message,
+          autoClose: false,
+          loading: false,
+        });
+      } else {
+        showNotification({
+          color: "red",
+          title: "Error",
+          message: "An unexpected error occurred.",
+        });
+      }
     }
 
-    setIsLoading(false);
+    let counter = 1;
+
+    const paymentStatusIntervalId = setInterval(async () => {
+      
+      const paymentStatusResponse = await fetch("/api/payment/status?" + new URLSearchParams({
+        payment_id: props.paymentId,
+      }));
+
+      const paymentStatusJson = await paymentStatusResponse.json();
+      const paymentStatus = paymentStatusJson.status;
+
+      if(paymentStatus === "SUCCEEDED") {
+        clearInterval(paymentStatusIntervalId);
+
+        showNotification({
+          color: "green",
+          title: "Success",
+          message: "Payment successful!",
+        });
+
+        setIsLoading(false);
+        window.location.href = "/";
+      } else if(paymentStatus === "FAILED") {
+        clearInterval(paymentStatusIntervalId);
+
+        showNotification({
+          color: "red",
+          title: "Error",
+          message: "Payment failed.",
+        });
+
+        setIsLoading(false);
+      }
+
+      counter++;
+    }, 500);
   }
 
   const paymentElementOptions: StripePaymentElementOptions = {
