@@ -1,17 +1,17 @@
-import { Checkbox, PasswordInput, TextInput, Text, Button, Loader } from '@mantine/core';
-import { useRouter } from 'next/dist/client/router';
-import Head from 'next/head';
-import Link from 'next/link';
+import { Checkbox, PasswordInput, TextInput, Text, Button, Loader } from '@mantine/core'
+import { useRouter } from 'next/dist/client/router'
+import Head from 'next/head'
+import Link from 'next/link'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
-import KeyIcon from '../components/atoms/KeyIcon';
-import MessageIcon from '../components/atoms/MessageIcon';
-import Logo from '../components/molecules/Logo';
-import UserContext from '../contexts/UserContext';
-import parseCookieString from '../utils/helpers/parseCookieString';
-import { useStyles } from '../pages_styles/signinStyles';
+import KeyIcon from '../components/atoms/KeyIcon'
+import MessageIcon from '../components/atoms/MessageIcon'
+import Logo from '../components/molecules/Logo'
+import UserContext from '../contexts/UserContext'
+import parseCookieString from '../utils/helpers/parseCookieString'
+import { useStyles } from '../pages_styles/signinStyles'
 
 async function SendSignInRequest(email: string, password: string, rememberMe: boolean) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/signin`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -20,69 +20,71 @@ async function SendSignInRequest(email: string, password: string, rememberMe: bo
     body: JSON.stringify({
       email,
       password,
+      remember_me: rememberMe,
+      set_cookie: true,
     }),
-  });
+  })
 
-  if(response.status == 200) {
-    return;
+  if (response.status == 200) {
+    return
   } else {
-    throw new Error(await response.text());
+    throw new Error(await response.text())
   }
 }
 
 export default function SignInPage() {
-  const { classes } = useStyles();
-  const { flushUser } = useContext(UserContext);
-  const router = useRouter();
+  const { classes } = useStyles()
+  const { flushUser } = useContext(UserContext)
+  const router = useRouter()
 
-  const { r } = router.query;
+  const { r } = router.query
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [rememberMe, setRememberMe] = useState(false)
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [emailError, setEmailError] = useState("")
+  const [passwordError, setPasswordError] = useState("")
 
   const handleSignInButtonClick = async () => {
-    setEmailError("");
-    setPasswordError("");
+    setEmailError("")
+    setPasswordError("")
 
-    const emailValidationRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    const emailValidationRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
 
-    const emailMatches = emailValidationRegex.test(email);
-    const passwordMatches = password.length > 0;
+    const emailMatches = emailValidationRegex.test(email)
+    const passwordMatches = password.length > 0
 
-    if(!emailMatches || !passwordMatches) {
-      if(!emailMatches) {
-        setEmailError("Email is invalid");
+    if (!emailMatches || !passwordMatches) {
+      if (!emailMatches) {
+        setEmailError("Email is invalid")
       }
 
-      if(!passwordMatches) {
-        setPasswordError("Password is invalid");
+      if (!passwordMatches) {
+        setPasswordError("Password is invalid")
       }
     } else {
-      setLoading(true);
-      
+      setLoading(true)
+
       try {
-        await SendSignInRequest(email, password, rememberMe);
-        await flushUser();
+        await SendSignInRequest(email, password, rememberMe)
+        await flushUser()
 
-        if(r && typeof r == "string") {
-          router.push(decodeURIComponent(r));
+        if (r && typeof r == "string") {
+          router.push(decodeURIComponent(r))
         } else {
-          router.push("/");
+          router.push("/")
         }
-      } catch(e) {
-        console.error(e);
+      } catch (e) {
+        console.error(e)
 
-        setPasswordError("Invalid email or password");
-        setLoading(false);
+        setPasswordError("Invalid email or password")
+        setLoading(false)
       }
     }
-  };
+  }
 
   return (
     <>
@@ -153,9 +155,9 @@ export default function SignInPage() {
           onClick={handleSignInButtonClick}
         >
           {
-            loading ? 
+            loading ?
               <Loader size={'sm'} />
-            :
+              :
               "Sign In"
           }
         </Button>
@@ -168,12 +170,12 @@ export default function SignInPage() {
 }
 
 export async function getServerSideProps(context: any) {
-  const { req, query } = context;
+  const { req, query } = context
 
-  let redirectPath: string | undefined = undefined;
-  const cookies = parseCookieString(req.headers.cookie);
+  let redirectPath: string | undefined = undefined
+  const cookies = parseCookieString(req.headers.cookie)
 
-  if(cookies.access_token) {
+  if (cookies.access_token) {
     const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/auth/verify`, {
       method: 'POST',
       credentials: 'include',
@@ -183,10 +185,10 @@ export async function getServerSideProps(context: any) {
       body: JSON.stringify({
         access_token: cookies.access_token,
       }),
-    });
+    })
 
-    if(response.status == 200) {
-      redirectPath = query.r || "/";
+    if (response.status == 200) {
+      redirectPath = query.r || "/"
     }
   }
 
@@ -196,5 +198,5 @@ export async function getServerSideProps(context: any) {
       permanent: false,
     } : undefined,
     props: {},
-  };
+  }
 }
