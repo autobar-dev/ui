@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autobar</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #181818;
+    --accent: #E3B04B;
+    --accent-dim: rgba(227,176,75,0.12);
+    --accent-dim2: rgba(227,176,75,0.06);
+    --white: #ffffff;
+    --gray: #999999;
+    --card: #222222;
+    --card-border: #2e2e2e;
+    --font: 'Outfit', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(24,24,24,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+
+  .nav-logo svg { width: 32px; height: 32px; }
+
+  .nav-logo span {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #181818 !important;
+    font-weight: 600 !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    transition: opacity 0.2s !important;
+  }
+
+  .nav-cta:hover { opacity: 0.88; color: #181818 !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 4rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-line {
+    position: absolute;
+    top: 0; bottom: 0;
+    right: 44%;
+    width: 1px;
+    background: rgba(227,176,75,0.15);
+  }
+
+  .hero-dot {
+    position: absolute;
+    width: 480px;
+    height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(227,176,75,0.08) 0%, transparent 70%);
+    right: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .hero-content { max-width: 520px; position: relative; z-index: 2; }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent-dim);
+    border: 1px solid rgba(227,176,75,0.25);
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--gray);
+    font-weight: 300;
+    max-width: 420px;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--accent);
+    color: #181818;
+    font-family: var(--font);
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 0.85rem 1.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--gray);
+    font-family: var(--font);
+    font-size: 0.95rem;
+    font-weight: 400;
+    padding: 0.85rem 0;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--white); }
+
+  .hero-image {
+    position: absolute;
+    right: 4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38%;
+    max-width: 420px;
+    z-index: 1;
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 40px 80px rgba(0,0,0,0.6));
+  }
+
+  /* PROBLEM STRIP */
+  .problem-strip {
+    padding: 5rem 4rem;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 3.5rem;
+    max-width: 600px;
+  }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .problem-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.2s;
+  }
+
+  .problem-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+  }
+
+  .problem-card:hover {
+    border-color: rgba(227,176,75,0.35);
+    transform: translateY(-3px);
+  }
+
+  .problem-icon {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .problem-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .problem-card p {
+    font-size: 0.875rem;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  /* HOW IT WORKS */
+  .how {
+    padding: 5rem 4rem;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin-top: 3.5rem;
+  }
+
+  .step {
+    position: relative;
+  }
+
+  .step-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    background: var(--accent);
+    color: #181818;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .step h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .step p {
+    font-size: 0.875rem;
+    color: var(--gray);
+    line-height: 1.65;
+  }
+
+  .step-connector {
+    display: none;
+  }
+
+  /* STATS */
+  .stats {
+    padding: 5rem 4rem;
+    border-top: 1px solid var(--card-border);
+    background: var(--accent-dim2);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    margin-top: 3.5rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-top: 3px solid var(--accent);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: left;
+  }
+
+  .stat-val {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-note {
+    font-size: 0.8rem;
+    color: var(--gray);
+  }
+
+  /* FEATURES */
+  .features {
+    padding: 5rem 4rem;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .features-list {
+    margin-top: 3.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    background: var(--card);
+    transition: border-color 0.2s;
+  }
+
+  .feature-item:hover { border-color: rgba(227,176,75,0.3); }
+
+  .feature-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    border: 1px solid rgba(227,176,75,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .feature-check svg { width: 10px; height: 10px; }
+
+  .feature-item h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.2rem;
+  }
+
+  .feature-item p {
+    font-size: 0.8rem;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  /* STUDENT CALLOUT */
+  .callout {
+    margin: 0 4rem;
+    padding: 3rem;
+    border: 1px solid rgba(227,176,75,0.25);
+    border-radius: 16px;
+    background: var(--accent-dim);
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .callout-text { flex: 1; }
+
+  .callout h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .callout p {
+    color: var(--gray);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    max-width: 500px;
+  }
+
+  /* CTA */
+  .cta {
+    padding: 7rem 4rem;
+    text-align: center;
+    border-top: 1px solid var(--card-border);
+    margin-top: 5rem;
+  }
+
+  .cta-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .cta h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  .cta p {
+    color: var(--gray);
+    font-size: 1.05rem;
+    max-width: 480px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .cta-sub {
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--gray);
+    font-style: italic;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--gray);
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+
+  .footer-logo svg { width: 24px; height: 24px; }
+  .footer-logo span { font-size: 0.9rem; font-weight: 600; color: var(--white); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-content > * {
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-content > *:nth-child(1) { animation-delay: 0.05s; }
+  .hero-content > *:nth-child(2) { animation-delay: 0.15s; }
+  .hero-content > *:nth-child(3) { animation-delay: 0.25s; }
+  .hero-content > *:nth-child(4) { animation-delay: 0.35s; }
+
+  .hero-image {
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 40 40" fill="none">
+      <path d="M20 5 L35 32 H5 Z" stroke="#E3B04B" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+      <path d="M20 14 L20 24 M16 20 L24 20" stroke="#E3B04B" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>autobar</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problem">The Problem</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#concept">The Concept</a></li>
+    <li><a href="#contact" class="nav-cta">Let's Talk</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-line"></div>
+  <div class="hero-dot"></div>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">Student Project · Seeking Feedback</span>
+    <h1 class="hero-title">
+      The future of<br>
+      festival <em>bars.</em>
+    </h1>
+    <p class="hero-sub">
+      Self-service beer modules for music festivals — no bartenders, no queues, no tokens. Walk up, tap your card, pour your pint.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">
+        Share your thoughts
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#181818" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#how" class="btn-ghost">
+        See how it works
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M3 8l4 4 4-4" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-image">
+    <img src="/mnt/user-data/uploads/Gemini_Generated_Image_u0ek0nu0ek0nu0ek.png" alt="Autobar module" onerror="this.style.display='none'">
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem-strip" id="problem">
+  <p class="section-label">The Problem</p>
+  <h2 class="section-title">Festival bars haven't changed in decades.</h2>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="problem-icon">💸</div>
+      <h3>Staffing is expensive</h3>
+      <p>Every bar requires multiple workers per shift — one of the biggest operational costs at any event.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">⏳</div>
+      <h3>Long queues lose sales</h3>
+      <p>Slow service means guests miss acts. Fewer moments at the bar means less revenue for organizers.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">📦</div>
+      <h3>Hard to set up & scale</h3>
+      <p>Existing solutions aren't modular. Adding more bar capacity means hiring more people.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">📊</div>
+      <h3>No real-time visibility</h3>
+      <p>Organizers lack live data on sales and stock — decisions are made blind, mid-event.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <p class="section-label">How It Works</p>
+  <h2 class="section-title">Walk up. Tap. Pour.</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Walk Up</h3>
+      <p>Each Autobar module serves one type of beer. Guests simply approach the module for the beer they want — no menus, no app, no wristbands.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Tap Your Card</h3>
+      <p>One tap on the contactless terminal. A small amount is held on the card. No tokens, no cash, no queues.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Pour Your Pint</h3>
+      <p>The tap unlocks immediately. The guest pours their own fresh beer in seconds and goes back to the music.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats" id="concept">
+  <p class="section-label">What We're Designing For</p>
+  <h2 class="section-title">The benefits we're building toward.</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-val">0</div>
+      <div class="stat-label">Bartenders needed</div>
+      <div class="stat-note">Our core design goal</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">1</div>
+      <div class="stat-label">Crew to run the whole bar</div>
+      <div class="stat-note">vs. one per tap traditionally</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">∞</div>
+      <div class="stat-label">Scalable setup</div>
+      <div class="stat-note">Add modules as your event grows</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">★</div>
+      <div class="stat-label">Flexible pricing</div>
+      <div class="stat-note">Revenue share or module rental</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <p class="section-label">Features</p>
+  <h2 class="section-title">Built for real festivals.</h2>
+  <div class="features-list">
+    <div class="feature-item">
+      <div class="feature-check">
+        <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#E3B04B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <h4>Contactless payment</h4>
+        <p>Card tap unlocks the tap. No tokens, no cash, no friction.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-check">
+        <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#E3B04B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <h4>Real-time dashboard</h4>
+        <p>Live sales, stock levels, and revenue — all visible to organizers.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-check">
+        <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#E3B04B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <h4>Fully branded per festival</h4>
+        <p>Each module displays your branding and the beer on tap.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-check">
+        <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#E3B04B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <h4>Modular & scalable</h4>
+        <p>Add or remove units depending on event size and crowd flow.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-check">
+        <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#E3B04B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <h4>Weatherproof</h4>
+        <p>Designed for outdoor events. Built to handle the Swedish summer.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-check">
+        <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#E3B04B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <h4>Swedish & English UI</h4>
+        <p>Designed for Swedish festivals with international guests in mind.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDENT CALLOUT -->
+<div class="callout">
+  <div class="callout-text">
+    <h2>This is a student project — and that's the point.</h2>
+    <p>We're not here to sell you something. We're designing a concept and want to hear from the people who actually run festivals. What would make this work? What wouldn't? Your perspective shapes what we build.</p>
+  </div>
+  <a href="#contact" class="btn-primary" style="white-space: nowrap; flex-shrink: 0;">
+    Share your thoughts →
+  </a>
+</div>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <p class="cta-eyebrow">Get In Touch</p>
+  <h2>Let's chat.</h2>
+  <p>We'd love 30 minutes to hear your perspective — what would make this work for you, and what wouldn't?</p>
+  <a href="mailto:hello@autobar.se" class="btn-primary" style="font-size: 1rem; padding: 1rem 2rem; display: inline-flex;">
+    Book a free call →
+  </a>
+  <p class="cta-sub">This is a student research project. No sales pitch, just honest questions.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">
+    <svg viewBox="0 0 40 40" fill="none">
+      <path d="M20 5 L35 32 H5 Z" stroke="#E3B04B" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+      <path d="M20 14 L20 24 M16 20 L24 20" stroke="#E3B04B" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>autobar</span>
+  </a>
+  <p>A student project exploring self-service bar technology for music festivals.</p>
+  <p>hello@autobar.se</p>
+</footer>
+
+</body>
+</html>
