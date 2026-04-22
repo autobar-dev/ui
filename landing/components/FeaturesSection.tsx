@@ -29,7 +29,7 @@ const features = [
     description: 'Designed for Swedish festivals with international guests in mind.',
   },
   {
-    icon: '/beer-icon.svg',
+    icon: '/rain-icon.svg',
     title: 'Weatherproof',
     description: 'Designed for outdoor events. Built to handle the Swedish summer.',
   },
