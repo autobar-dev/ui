@@ -22,9 +22,9 @@ export default function Footer() {
         </p>
 
         <div className="flex flex-col items-center md:items-end gap-1">
-          {/* <Link href="mailto:hello@autobar.se" className="text-white font-bold hover:text-[#E3B04B] transition-colors">
-            hello@autobar.se
-          </Link> */}
+          <Link href="mailto:hello@autobar.dev" className="text-white font-bold hover:text-[#E3B04B] transition-colors">
+            hello@autobar.dev
+          </Link>
           <p className="text-gray-600 text-xs font-bold uppercase tracking-widest">
             © {new Date().getFullYear()} Autobar
           </p>
