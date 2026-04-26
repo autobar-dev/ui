@@ -64,7 +64,7 @@ export default function Navbar() {
       <div className="md:hidden relative z-[110]">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="text-white p-2 focus:outline-none cursor-pointer"
+          className="text-white p-4 -mr-4 focus:outline-none cursor-pointer"
           aria-label="Toggle Menu"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-300 ${isOpen ? 'rotate-90' : ''}`}>
@@ -86,7 +86,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 bg-[#0a0a0a] z-[105] flex flex-col items-center justify-center transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 w-full h-screen h-[100dvh] bg-[#0a0a0a] z-[105] flex flex-col items-center justify-center transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
         <ul className="flex flex-col items-center gap-8 text-center">
           {navLinks.map((link, i) => (
