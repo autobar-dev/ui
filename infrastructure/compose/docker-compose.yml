@@ -1,0 +1,8 @@
+services:
+  dashboard:
+    image: registry.resources.lan/autobar/ui-dashboard:latest
+    container_name: dashboard
+    env_file: ../../../.env/dashboard.env
+    volumes:
+      - ../../../.env/ca:/usr/local/share/ca-certificates:ro
+    

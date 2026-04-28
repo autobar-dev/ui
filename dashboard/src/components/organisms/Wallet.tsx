@@ -1,15 +1,14 @@
 import { CurrencyRepository } from "@/repositories/CurrencyRepository";
 import type { Wallet as WalletType } from "@/types/wallet";
-import { serviceCurrencyToCurrency } from "@/utils/currency_utils";
 import { Card, Flex, Table, TableBody, TableCell, TableRow, Title } from "@tremor/react";
 
 export default async function Wallet({ wallet }: {
   wallet: WalletType,
 }) {
-  const currencyRepository = new CurrencyRepository("http://localhost:9000/currency");
+  // const currencyRepository = new CurrencyRepository("http://localhost:9000/currency");
 
-  const serviceCurrency = await currencyRepository.get(wallet.currencyCode);
-  const currency = serviceCurrencyToCurrency(serviceCurrency);
+  // const serviceCurrency = await currencyRepository.get(wallet.currencyCode);
+  // const currency = serviceCurrencyToCurrency(serviceCurrency);
 
   return (
     <Card>
@@ -25,11 +24,11 @@ export default async function Wallet({ wallet }: {
           </TableRow>
           <TableRow>
             <TableCell className="font-bold">Balance</TableCell>
-            <TableCell className="font-mono">{`${(wallet.balance / currency.minorUnitDivisor).toFixed(Math.log10(currency.minorUnitDivisor))}`}</TableCell>
+            {/* <TableCell className="font-mono">{`${(wallet.balance / currency.minorUnitDivisor).toFixed(Math.log10(currency.minorUnitDivisor))}`}</TableCell> */}
           </TableRow>
           <TableRow>
             <TableCell className="font-bold">Currency</TableCell>
-            <TableCell className="italic">{`${wallet.currencyCode} (${currency.enabled ? "enabled" : "disabled"})`}</TableCell>
+            {/* <TableCell className="italic">{`${wallet.currencyCode} (${currency.enabled ? "enabled" : "disabled"})`}</TableCell> */}
           </TableRow>
         </TableBody>
       </Table>
