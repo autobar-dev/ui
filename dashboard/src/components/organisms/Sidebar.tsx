@@ -2,13 +2,14 @@
 
 import SidebarItem from "../atoms/SidebarItem";
 import { usePathname } from "next/navigation";
-import { HiCube, HiCurrencyDollar, HiUsers } from "react-icons/hi2";
+import { HiCube, HiCurrencyDollar, HiUsers, HiCpuChip } from "react-icons/hi2";
 import { ReactNode } from "react";
 
-type SidebarItemContent = {
+export type SidebarItemContent = {
   path: string,
   label: string,
   icon: ReactNode,
+  children?: SidebarItemContent[],
 };
 
 const items: SidebarItemContent[] = [
@@ -25,6 +26,15 @@ const items: SidebarItemContent[] = [
     icon: (
       <HiCube className="mr-2 text-xl inline-block" />
     ),
+    children: [
+      {
+        path: "/modules/firmware",
+        label: "Firmware",
+        icon: (
+          <HiCpuChip className="mr-2 text-xl inline-block" />
+        ),
+      }
+    ]
   },
   {
     path: "/currencies",
@@ -43,11 +53,10 @@ export default function Sidebar() {
       <div className="space-y-1">
         {items.map(item => (
           <SidebarItem
-            path={item.path}
-            label={item.label}
-            icon={item.icon}
+            item={item}
             key={`sidebar-item-${item.path}`}
-            active={path.includes(item.path)}
+            active={path === item.path || (item.children?.some(c => path === c.path) ?? false)}
+            currentPath={path}
           />
         ))}
       </div>

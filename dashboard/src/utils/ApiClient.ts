@@ -26,7 +26,7 @@ export class ApiClient {
         this.refreshToken = newTokens.refreshToken;
     }
 
-    async get<TResponse>(url: string): Promise<TResponse> {
+    public async get<TResponse>(url: string): Promise<TResponse> {
         try {
             return await this.getInternal<TResponse>(url);
         } catch (error) {
@@ -57,7 +57,7 @@ export class ApiClient {
         return json.data;
     }
 
-    async post<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
+    public async post<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
         try {
             return await this.postInternal<TResponse>(url, body);
         } catch (error) {

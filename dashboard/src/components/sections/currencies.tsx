@@ -1,26 +1,41 @@
-import { Badge, Card, Col, Flex, Grid, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Title } from "@tremor/react";
-import { CurrencyRepository } from "@/repositories/CurrencyRepository";
-import { filterEnabledCurrencies, serviceCurrencyToCurrency } from "@/utils/currency_utils";
+"use client";
+
+import { Grid } from "@tremor/react";
 import CurrenciesTable from "../organisms/CurrenciesTable";
-import RateExchange from "../organisms/RateExchange";
+import AddCurrency from "../organisms/AddCurrency";
+import { useContext, useEffect, useState } from "react";
+import { RepositoriesContext } from "@/contexts/RepositoriesContext";
+import { Currency } from "@/types/currency";
 
-export default async function CurrenciesSection() {
-  const currencyRepository = new CurrencyRepository("http://localhost:9000/currency");
-  const serviceCurrencies = await currencyRepository.getAll();
-  const enabledCurrenciesCodes = await currencyRepository.getAllEnabled();
+export default function CurrenciesSection() {
+  const { currencyRepository } = useContext(RepositoriesContext);
 
-  const currencies = serviceCurrencies.map(serviceCurrencyToCurrency);
-  const enabledCurrencies = filterEnabledCurrencies(currencies, enabledCurrenciesCodes);
+  const [currencies, setCurrencies] = useState<Currency[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const currenciesSorted = currencies.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+  useEffect(() => {
+    currencyRepository.getAll().then((data) => {
+      setCurrencies(data);
+      setLoading(false);
+    }).catch(err => {
+      console.error("Failed to load currencies", err);
+      setLoading(false);
+    });
+  }, [currencyRepository]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-slate-400 animate-pulse">Loading currencies...</p>
+      </div>
+    );
+  }
 
   return (
-    <Grid numItems={1} className="gap-2">
-      <CurrenciesTable currencies={currenciesSorted} />
-      <RateExchange
-        currencies={currencies}
-        enabledCurrencies={enabledCurrencies}
-      />
+    <Grid numItems={1} className="gap-8">
+      <CurrenciesTable currencies={currencies} />
+      
+      <AddCurrency />
     </Grid>
   );
 }

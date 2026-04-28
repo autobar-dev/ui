@@ -2,21 +2,15 @@ export type Currency = {
   id: number,
   code: string,
   name: string,
-  minorUnitDivisor: number,
+  minor_unit_divisor: number,
   symbol?: string,
   enabled: boolean,
-  createdAt: Date,
-  updatedAt: Date,
-};
-
-export type EnabledCurrency = {
-  code: string,
-  name: string,
+  created_at: string,
 };
 
 export type Rate = {
   from: string,
   to: string,
   rate: number,
-  updatedAt: Date,
+  updated_at: string,
 };

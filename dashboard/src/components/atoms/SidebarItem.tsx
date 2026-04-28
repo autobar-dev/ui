@@ -1,26 +1,62 @@
-import { Button } from "@tremor/react";
+"use client";
+
 import Link from "next/link";
 import { ReactNode } from "react";
+import { SidebarItemContent } from "../organisms/Sidebar";
 
-export default function SidebarItem({ path, label, icon, active }: {
-  path: string,
-  label: string,
-  icon: ReactNode,
+export default function SidebarItem({ item, active, currentPath }: {
+  item: SidebarItemContent,
   active: boolean,
+  currentPath: string,
 }) {
-  const generalClassName = "w-full flex flex-row justify-start px-6 py-3 mt-2 border-none rounded-xl transition-all duration-200";
-  const activeClassName = "bg-tremor-brand text-white shadow-md shadow-blue-100";
-  const inactiveClassName = "bg-transparent text-slate-600 hover:bg-slate-100";
+  const isDirectlyActive = currentPath === item.path;
+  const hasActiveChild = item.children?.some(c => currentPath === c.path) ?? false;
+  
+  const hasChildren = item.children && item.children.length > 0;
+
+  // Base classes for the parent item
+  const baseClassName = "w-full flex flex-row justify-start items-center px-6 py-3 mt-2 rounded-xl transition-all duration-200 font-bold";
+  
+  let itemClassName = "";
+  if (isDirectlyActive) {
+    // Directly active: Solid blue background with white text
+    itemClassName = `${baseClassName} bg-[#3B82F6] text-white shadow-md shadow-blue-100`;
+  } else if (hasActiveChild) {
+    // Parent of an active child: Light blue background with blue text
+    itemClassName = `${baseClassName} bg-[#EFF6FF] text-[#3B82F6]`;
+  } else {
+    // Inactive: Transparent background with gray text
+    itemClassName = `${baseClassName} bg-transparent text-slate-600 hover:bg-slate-50`;
+  }
 
   return (
-    <Link href={path}>
-      <Button
-        className={`${generalClassName} ${active ? activeClassName : inactiveClassName}`}
-        variant={active ? "primary" : "secondary"}
-      >
-        {icon}
-        <span className="inline-block ml-4 font-medium">{label}</span>
-      </Button>
-    </Link>
+    <div>
+      <Link href={item.path} className={itemClassName}>
+        <span className="flex items-center">
+          {item.icon}
+          <span className="inline-block ml-4">{item.label}</span>
+        </span>
+      </Link>
+
+      {hasChildren && (
+        <div className="ml-8 mt-1 space-y-1 border-l-2 border-slate-100 pl-2">
+          {item.children!.map((child) => {
+            const isChildActive = currentPath === child.path;
+            const childClassName = `w-full flex flex-row justify-start items-center px-4 py-2 mt-1 rounded-lg transition-all duration-200 text-sm font-semibold ${
+              isChildActive 
+                ? "bg-[#DBEAFE] text-[#1D4ED8] shadow-sm" 
+                : "bg-transparent text-slate-500 hover:bg-slate-50"
+            }`;
+
+            return (
+              <Link href={child.path} key={`child-${child.path}`} className={childClassName}>
+                <span className="opacity-70">{child.icon}</span>
+                <span className="inline-block ml-3">{child.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }

@@ -1,18 +1,5 @@
-export type ServiceEnabledCurrency = {
-  code: string,
-  name: string,
-};
-
-export type ServiceCurrency = {
-  id: number,
-  code: string,
-  name: string,
-  minor_unit_divisor: number,
-  symbol: string | null,
-  enabled: boolean,
-  created_at: string,
-  updated_at: string,
-};
+import { Currency } from "@/types/currency";
+import { ApiClient } from "@/utils/ApiClient";
 
 export type ServiceRate = {
   from: string,
@@ -22,53 +9,31 @@ export type ServiceRate = {
 };
 
 export class CurrencyRepository {
-  private service_url: string;
+  private servicePath: string;
+  private apiClient: ApiClient;
 
-  constructor(url: string) {
-    this.service_url = url;
+  constructor(url: string, apiClient: ApiClient) {
+    this.servicePath = url;
+    this.apiClient = apiClient;
   }
 
-  async get(code: string): Promise<ServiceCurrency> {
-    const url = this.service_url + "/currency/?code=" + code;
-
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      const data = (await response.json()).data;
-
-      return data as ServiceCurrency;
-    } catch (e) {
-      throw e;
-    }
+  public async get(code: string): Promise<Currency> {
+    const resp = await this.apiClient.get<Currency>(this.servicePath + "/currency/?code=" + code);
+    return resp;
   }
 
-  async getAll(): Promise<ServiceCurrency[]> {
-    const url = this.service_url + "/currency/all";
-
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      const data = (await response.json()).data;
-
-      return data as ServiceCurrency[];
-    } catch (e) {
-      throw e;
-    }
+  public async getAll(): Promise<Currency[]> {
+    const resp = await this.apiClient.get<Currency[]>(this.servicePath + "/currency/all");
+    return resp;
   }
 
-  async getAllEnabled(): Promise<ServiceEnabledCurrency[]> {
-    const url = this.service_url + "/currency/enabled";
-
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      const data = (await response.json()).data;
-
-      return data as ServiceEnabledCurrency[];
-    } catch (e) {
-      throw e;
-    }
+  public async getAllEnabled(): Promise<Currency[]> {
+    const resp = await this.apiClient.get<Currency[]>(this.servicePath + "/currency/enabled");
+    return resp;
   }
 
-  async getRate(from: string, to: string): Promise<ServiceRate> {
-    const url = this.service_url + `/rate/?from=${from}&to=${to}`;
+  public async getRate(from: string, to: string): Promise<ServiceRate> {
+    const url = this.servicePath + `/rate/?from=${from}&to=${to}`;
 
     try {
       const response = await fetch(url, { cache: "no-store" });
@@ -81,7 +46,7 @@ export class CurrencyRepository {
   }
 
   async setCurrencyEnabled(currency: string, enabled: boolean): Promise<void> {
-    const url = this.service_url + "/currency/set-enabled";
+    const url = this.servicePath + "/currency/set-enabled";
 
     try {
       await fetch(url, {

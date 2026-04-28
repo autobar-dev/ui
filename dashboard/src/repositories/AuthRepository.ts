@@ -1,14 +1,14 @@
 import { Tokens } from "@/types/auth";
 
 export class AuthRepository {
-    baseUrl: string;
+    serviceUrl: string;
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
+    constructor(serviceUrl: string) {
+        this.serviceUrl = serviceUrl;
     }
 
     async refreshTokens(refreshToken: string): Promise<Tokens> {
-        const resp = await fetch(this.baseUrl + "/auth/refresh", {
+        const resp = await fetch(this.serviceUrl + "/auth/refresh", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export class AuthRepository {
     }
 
     async login(email: string, password: string): Promise<Tokens> {
-        const resp = await fetch(this.baseUrl + "/auth/user/login", {
+        const resp = await fetch(this.serviceUrl + "/auth/user/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
