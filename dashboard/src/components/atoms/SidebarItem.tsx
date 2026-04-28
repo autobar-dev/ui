@@ -19,7 +19,7 @@ export default function SidebarItem({ item, active, currentPath }: {
   
   let itemClassName = "";
   if (isDirectlyActive) {
-    // Directly active: Solid blue background with white text
+    // Directly active: Solid bright blue background with white text
     itemClassName = `${baseClassName} bg-[#3B82F6] text-white shadow-md shadow-blue-100`;
   } else if (hasActiveChild) {
     // Parent of an active child: Light blue background with blue text
@@ -42,15 +42,19 @@ export default function SidebarItem({ item, active, currentPath }: {
         <div className="ml-8 mt-1 space-y-1 border-l-2 border-slate-100 pl-2">
           {item.children!.map((child) => {
             const isChildActive = currentPath === child.path;
-            const childClassName = `w-full flex flex-row justify-start items-center px-4 py-2 mt-1 rounded-lg transition-all duration-200 text-sm font-semibold ${
-              isChildActive 
-                ? "bg-[#DBEAFE] text-[#1D4ED8] shadow-sm" 
-                : "bg-transparent text-slate-500 hover:bg-slate-50"
-            }`;
+            
+            // Sub-item styles
+            const childBaseClass = "w-full flex flex-row justify-start items-center px-4 py-2 mt-1 rounded-lg transition-all duration-200 text-sm font-bold";
+            const childActiveStyle = "bg-[#3B82F6] text-white shadow-md shadow-blue-100";
+            const childInactiveStyle = "bg-transparent text-slate-500 hover:bg-slate-50";
 
             return (
-              <Link href={child.path} key={`child-${child.path}`} className={childClassName}>
-                <span className="opacity-70">{child.icon}</span>
+              <Link 
+                href={child.path} 
+                key={`child-${child.path}`} 
+                className={`${childBaseClass} ${isChildActive ? childActiveStyle : childInactiveStyle}`}
+              >
+                <span className={isChildActive ? "opacity-100" : "opacity-70"}>{child.icon}</span>
                 <span className="inline-block ml-3">{child.label}</span>
               </Link>
             );
