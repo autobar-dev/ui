@@ -2,17 +2,18 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { Tokens } from "@/types/auth";
+import { AuthRepository } from "@/repositories/AuthRepository";
 
 type AuthContextValues = {
   tokens: Tokens | null;
   setTokens: (tokens: Tokens | null) => void;
   isAuthenticated: boolean;
-  logout: () => void;
+  logout: (authRepository: AuthRepository) => void;
 };
 
 const AuthContext = createContext<AuthContextValues | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode; }) {
   const [tokens, setTokensState] = useState<Tokens | null>(null);
 
   useEffect(() => {
@@ -35,8 +36,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
-    setTokens(null);
+  const logout = (authRepository: AuthRepository) => {
+    authRepository.logout(tokens?.refreshToken || "").finally(() => {
+      setTokens(null);
+    });
   };
 
   const isAuthenticated = !!tokens;

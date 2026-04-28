@@ -8,7 +8,7 @@ export class AuthRepository {
     }
 
     async refreshTokens(refreshToken: string): Promise<Tokens> {
-        const resp = await fetch(this.serviceUrl + "/auth/refresh", {
+        const resp = await fetch(this.serviceUrl + "/refresh", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export class AuthRepository {
     }
 
     async login(email: string, password: string): Promise<Tokens> {
-        const resp = await fetch(this.serviceUrl + "/auth/user/login", {
+        const resp = await fetch(this.serviceUrl + "/user/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -54,5 +54,22 @@ export class AuthRepository {
             accessToken: json.data.access_token,
             refreshToken: json.data.refresh_token,
         };
+    }
+
+    async logout(refreshToken: string): Promise<void> {
+        const resp = await fetch(this.serviceUrl + "/logout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                refresh_token: refreshToken,
+            }),
+        });
+
+        if (!resp.ok) {
+            const err = await resp.json();
+            throw new Error(err.message || "Failed to logout");
+        }
     }
 }
