@@ -3,6 +3,8 @@ services:
     image: registry.resources.lan/autobar/ui-dashboard:latest
     container_name: dashboard
     env_file: ../../../.env/dashboard.env
+    ports:
+      - "16000:80"
     volumes:
       - ../../../.env/ca:/usr/local/share/ca-certificates:ro
     
