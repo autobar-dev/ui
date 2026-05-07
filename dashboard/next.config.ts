@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ['t480-apisula-manjaro'],
+  allowedDevOrigins: ['pc.lan', 'pc'],
   output: "standalone",
 };
 

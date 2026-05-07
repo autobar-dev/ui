@@ -5,13 +5,35 @@ import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { AuthRepository } from '@/repositories/AuthRepository';
 import { ApiClient } from '@/utils/ApiClient';
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
-import { useEffect, useState, ReactNode } from 'react';
+import { useEffect, useState, ReactNode, useContext, useRef } from 'react';
 import Login from '@/components/organisms/Login';
 import Shell from '@/components/organisms/Shell';
 import { CurrencyRepository } from '@/repositories/CurrencyRepository';
+import { UserRepository } from "@/repositories/UserRepository";
+import { ModuleRepository } from "@/repositories/ModuleRepository";
+import { Tokens } from "@/types/auth";
 
-function AuthWrapper({ children }: { children: ReactNode }) {
-  const { isAuthenticated } = useAuth();
+function AuthWrapper({ children }: { children: ReactNode; }) {
+  const { isAuthenticated, tokens, setTokens } = useAuth();
+  const { apiClient, authRepository } = useContext(RepositoriesContext);
+  const tokensRef = useRef<Tokens | null>(tokens);
+
+  useEffect(() => {
+    tokensRef.current = tokens;
+  }, [tokens]);
+
+  useEffect(() => {
+    if (!apiClient || !authRepository) {
+      return;
+    }
+
+    apiClient.configure({
+      getTokens: () => tokensRef.current,
+      setTokens,
+      refresh: (refreshToken: string) => authRepository.refreshTokens(refreshToken),
+      onAuthFailure: () => setTokens(null)
+    });
+  }, [apiClient, authRepository, setTokens]);
 
   if (!isAuthenticated) {
     return <Login />;
@@ -20,12 +42,14 @@ function AuthWrapper({ children }: { children: ReactNode }) {
   return <Shell>{children}</Shell>;
 }
 
-export default function Providers({ children }: { children: ReactNode }) {
+export default function Providers({ children }: { children: ReactNode; }) {
   const [repositoriesLoading, setRepositoriesLoading] = useState<boolean>(true);
 
   const [apiClient, setApiClient] = useState<ApiClient>();
   const [authRepository, setAuthRepository] = useState<AuthRepository>();
   const [currencyRepository, setCurrencyRepository] = useState<CurrencyRepository>();
+  const [userRepository, setUserRepository] = useState<UserRepository>();
+  const [moduleRepository, setModuleRepository] = useState<ModuleRepository>();
 
   useEffect(() => {
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
@@ -33,21 +57,25 @@ export default function Providers({ children }: { children: ReactNode }) {
     const apiClient = new ApiClient(apiBaseUrl);
     const authRepository = new AuthRepository(apiBaseUrl + "/auth");
     const currencyRepository = new CurrencyRepository("/currency", apiClient);
-
-    apiClient.setRefresher(refreshToken => authRepository.refreshTokens(refreshToken));
+    const userRepository = new UserRepository("/user", apiClient);
+    const moduleRepository = new ModuleRepository("/module", apiClient);
 
     setApiClient(apiClient);
     setAuthRepository(authRepository);
     setCurrencyRepository(currencyRepository);
+    setUserRepository(userRepository);
+    setModuleRepository(moduleRepository);
   }, []);
 
   useEffect(() => {
     setRepositoriesLoading(!(
       !!apiClient &&
       !!authRepository &&
-      !!currencyRepository
+      !!currencyRepository &&
+      !!userRepository &&
+      !!moduleRepository
     ));
-  }, [apiClient, authRepository, currencyRepository]);
+  }, [apiClient, authRepository, currencyRepository, userRepository, moduleRepository]);
 
   return (
     <>
@@ -60,6 +88,8 @@ export default function Providers({ children }: { children: ReactNode }) {
           apiClient: apiClient!,
           authRepository: authRepository!,
           currencyRepository: currencyRepository!,
+          userRepository: userRepository!,
+          moduleRepository: moduleRepository!,
         }}>
           <AuthProvider>
             <AuthWrapper>

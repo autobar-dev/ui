@@ -1,4 +1,10 @@
 export type Tokens = {
     accessToken: string;
     refreshToken: string;
-}
+};
+
+export type IsValidData = {
+    sub_typ: string;
+    sub: string;
+    rol: "admin" | "user";
+};

@@ -1,3 +1,5 @@
+import { ApiClient } from "@/utils/ApiClient";
+
 export type ServiceModule = {
   id: number,
   serial_number: string,
@@ -9,9 +11,11 @@ export type ServiceModule = {
 
 export class ModuleRepository {
   private service_url: string;
+  private apiClient: ApiClient;
 
-  constructor(url: string) {
+  constructor(url: string, apiClient: ApiClient) {
     this.service_url = url;
+    this.apiClient = apiClient;
   }
 
   async get(serial_number: string): Promise<ServiceModule> {

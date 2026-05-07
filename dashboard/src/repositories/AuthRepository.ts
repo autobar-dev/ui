@@ -1,4 +1,4 @@
-import { Tokens } from "@/types/auth";
+import { IsValidData, Tokens } from "@/types/auth";
 
 export class AuthRepository {
     serviceUrl: string;
@@ -71,5 +71,34 @@ export class AuthRepository {
             const err = await resp.json();
             throw new Error(err.message || "Failed to logout");
         }
+    }
+
+    async isTokenValid(accessToken: string): Promise<IsValidData> {
+        let resp;
+        try {
+            resp = await fetch(this.serviceUrl + "/is-valid", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+
+        } catch (error) {
+            console.error("Token validation request failed", error);
+            throw new Error("Failed to validate token");
+        }
+        if (!resp.ok) {
+            const err = await resp.json();
+            throw new Error(err.message || "Failed to validate token");
+        }
+
+        const json = await resp.json();
+
+        if (!!json.error) {
+            throw new Error(json.error.message || "Failed to validate token");
+        }
+
+        return json.data as IsValidData;
     }
 }

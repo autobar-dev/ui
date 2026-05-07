@@ -1,26 +1,60 @@
 "use client";
 
+/**
+ * Layout module for the application header.
+ */
 import Logo from "../molecules/Logo";
+import UserMenu from "../molecules/UserMenu";
 import { useAuth } from "@/contexts/AuthContext";
 import { RepositoriesContext } from "@/contexts/RepositoriesContext";
-import { useContext } from "react";
-import { HiArrowRightOnRectangle } from "react-icons/hi2";
+import { useContext, useEffect, useState } from "react";
+import { type User } from "@/types/user";
+import { type IsValidData } from "@/types/auth";
 
+/**
+ * Renders the dashboard header with user avatar and menu.
+ */
 export default function Header() {
-  const { logout } = useAuth();
-  const { authRepository } = useContext(RepositoriesContext);
+  const { tokens } = useAuth();
+  const { apiClient, authRepository, userRepository } = useContext(RepositoriesContext);
+  const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<IsValidData["rol"] | null>(null);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const loadUser = async () => {
+      try {
+        const [userData, validation] = await Promise.all([
+          userRepository.whoAmI(),
+          authRepository.isTokenValid(tokens?.accessToken || "")
+        ]);
+
+        if (!isCancelled) {
+          setUser(userData);
+          setRole(validation.rol);
+        }
+      } catch (error) {
+        if (!isCancelled) {
+          console.error("Failed to load user info for header", error);
+          setUser(null);
+          setRole(null);
+        }
+      }
+    };
+
+    loadUser();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [apiClient, authRepository, userRepository]);
 
   return (
     <header className="bg-white w-full h-20 fixed left-0 top-0 border-b border-slate-100 flex items-center justify-between z-50 px-8 shadow-sm">
       <Logo withTextClassName="h-10" />
 
-      <button
-        onClick={() => logout(authRepository)}
-        className="flex items-center space-x-2 px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 hover:text-red-500 hover:border-red-100 transition-all cursor-pointer whitespace-nowrap"
-      >
-        <HiArrowRightOnRectangle className="text-xl" />
-        <span>Log out</span>
-      </button>
+      {user && role && <UserMenu user={user} role={role} />}
     </header>
   );
 }

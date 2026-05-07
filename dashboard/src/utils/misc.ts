@@ -1,3 +1,11 @@
+/**
+ * Utility helpers used across the dashboard UI.
+ */
+import { User } from "@/types/user";
+
+/**
+ * Formats a date into a human-readable timestamp string.
+ */
 export function formatDate(date: Date): string {
   const hours = date.getHours();
   const minutes = date.getMinutes();
@@ -16,6 +24,29 @@ export function formatDate(date: Date): string {
   return `${hoursString}:${minutesString}:${secondsString} ${daysString}/${monthsString}/${yearsString}`;
 }
 
+/**
+ * Formats a float with a fixed number of decimal places.
+ */
 export function formatFloat(value: number, decimalPlaces: number): string {
   return (Math.round(value * 10 ** decimalPlaces) / 10 ** decimalPlaces).toFixed(decimalPlaces);
+}
+
+/**
+ * Returns uppercase initials for the given user, falling back to email.
+ */
+export function getInitials(user: User): string {
+  const firstName = user.first_name.trim();
+  const lastName = user.last_name.trim();
+  const email = user.email.trim();
+
+  if (firstName || lastName) {
+    const initials = `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase();
+    if (initials) {
+      return initials;
+    }
+  }
+
+  // Conservative fallback: use email initials if names are missing/empty.
+  const emailInitials = email.slice(0, 2).toUpperCase();
+  return emailInitials || "??";
 }

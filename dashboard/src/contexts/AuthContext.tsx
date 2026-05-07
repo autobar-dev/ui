@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import { Tokens } from "@/types/auth";
 import { AuthRepository } from "@/repositories/AuthRepository";
 
@@ -13,19 +13,23 @@ type AuthContextValues = {
 
 const AuthContext = createContext<AuthContextValues | undefined>(undefined);
 
+/**
+ * Provide centralized authentication state and token persistence.
+ */
 export function AuthProvider({ children }: { children: ReactNode; }) {
-  const [tokens, setTokensState] = useState<Tokens | null>(null);
-
-  useEffect(() => {
+  const [tokens, setTokensState] = useState<Tokens | null>(() => {
     const savedTokens = localStorage.getItem("auth_tokens");
-    if (savedTokens) {
-      try {
-        setTokensState(JSON.parse(savedTokens));
-      } catch (e) {
-        console.error("Failed to parse saved tokens", e);
-      }
+    if (!savedTokens) {
+      return null;
     }
-  }, []);
+
+    try {
+      return JSON.parse(savedTokens) as Tokens;
+    } catch (e) {
+      console.error("Failed to parse saved tokens", e);
+      return null;
+    }
+  });
 
   const setTokens = (newTokens: Tokens | null) => {
     setTokensState(newTokens);
@@ -51,6 +55,9 @@ export function AuthProvider({ children }: { children: ReactNode; }) {
   );
 }
 
+/**
+ * Access the current authentication state and actions.
+ */
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
