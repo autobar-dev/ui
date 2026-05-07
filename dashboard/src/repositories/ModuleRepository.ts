@@ -1,12 +1,25 @@
+import { Currency } from "@/types/currency";
 import { ApiClient } from "@/utils/ApiClient";
 
 export type ServiceModule = {
   id: number,
   serial_number: string,
-  station_slug: string | null,
-  product_slug: string | null,
+  station_id: number | null,
+  product_id: number | null,
+  enabled: boolean,
   prices: Map<string, number>,
+  display_currency: Currency,
+  display_unit: {
+    id: number,
+    amount: number,
+    symbol: string,
+    divisor_from_millilitres: number,
+    decimals_displayed: number,
+    created_at: string,
+    updated_at: string,
+  },
   created_at: string,
+  updated_at: string,
 };
 
 export class ModuleRepository {
@@ -20,27 +33,12 @@ export class ModuleRepository {
 
   async get(serial_number: string): Promise<ServiceModule> {
     const url = this.service_url + "/?serial_number=" + serial_number;
-
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      const data = (await response.json()).data;
-
-      return data as ServiceModule;
-    } catch (e) {
-      throw e;
-    }
+    const resp = await this.apiClient.get<ServiceModule>(url);
+    return resp;
   }
 
   async getAll(): Promise<ServiceModule[]> {
-    const url = this.service_url + "/get-all";
-
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      const data = (await response.json()).data;
-
-      return data as ServiceModule[];
-    } catch (e) {
-      throw e;
-    }
+    const resp = await this.apiClient.get<ServiceModule[]>(this.service_url + "/all");
+    return resp;
   }
 }
