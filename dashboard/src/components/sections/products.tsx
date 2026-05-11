@@ -35,7 +35,7 @@ export default function ProductsSection() {
       <Center h={400}>
         <Stack align="center" gap="xs">
           <Loader size="lg" variant="dots" />
-          <Text size="sm" c="dimmed" fw={500}>Loading products...</Text>
+          <Text size="sm" c="dimmed" fw={300}>Loading products...</Text>
         </Stack>
       </Center>
     );
@@ -82,7 +82,7 @@ export default function ProductsSection() {
     return (
       <Table.Tr key={product.id}>
         <Table.Td align="center">
-          <Text size="xs" ff="monospace" fw={600} style={{ backgroundColor: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', display: 'inline-block' }}>
+          <Text size="xs" ff="monospace" fw={300} style={{ backgroundColor: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', display: 'inline-block' }}>
             {product.id}
           </Text>
         </Table.Td>
@@ -90,7 +90,7 @@ export default function ProductsSection() {
           <Center>{coverElement}</Center>
         </Table.Td>
         <Table.Td>
-          <Text size="sm" fw={700} c="slate.8">
+          <Text size="sm" fw={400} c="slate.8">
             {String(name)}
           </Text>
         </Table.Td>
@@ -103,7 +103,7 @@ export default function ProductsSection() {
   return (
     <Card p="xl" radius={32} shadow="sm">
       <Group mb="xl" gap="xs">
-        <Title order={3} size="h4" fw={700}>
+        <Title order={3} size="h4" fw={500}>
           Products
         </Title>
         <Badge color="blue" variant="light" radius="xl" size="xs">

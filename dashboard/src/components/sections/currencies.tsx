@@ -28,7 +28,7 @@ export default function CurrenciesSection() {
       <Center h={400}>
         <Stack align="center" gap="xs">
           <Loader size="lg" variant="dots" />
-          <Text size="sm" c="dimmed" fw={500}>Loading currencies...</Text>
+          <Text size="sm" c="dimmed" fw={300}>Loading currencies...</Text>
         </Stack>
       </Center>
     );

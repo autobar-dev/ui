@@ -55,7 +55,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
               size="md"
-              fw={600}
+              fw={300}
             />
 
             <PasswordInput
@@ -66,12 +66,12 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               required
               size="md"
-              fw={600}
+              fw={300}
             />
 
             <Group justify="space-between">
               <Checkbox label="Remember me" size="sm" color="blue" />
-              <Anchor component="button" type="button" size="sm" fw={600}>
+              <Anchor component="button" type="button" size="sm" fw={400}>
                 Forgot password?
               </Anchor>
             </Group>
@@ -90,7 +90,7 @@ export default function Login() {
               style={{
                 height: 56,
                 fontSize: '1.125rem',
-                fontWeight: 700,
+                fontWeight: 400,
                 boxShadow: '0 4px 15px -5px rgba(59, 130, 246, 0.5)',
               }}
             >

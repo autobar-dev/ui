@@ -35,7 +35,7 @@ export default function ModulesSection() {
       <Center h={400}>
         <Stack align="center" gap="xs">
           <Loader size="lg" variant="dots" />
-          <Text size="sm" c="dimmed" fw={500}>Loading modules...</Text>
+          <Text size="sm" c="dimmed" fw={300}>Loading modules...</Text>
         </Stack>
       </Center>
     );
@@ -59,13 +59,13 @@ export default function ModulesSection() {
     );
 
     const unitElement = (
-      <Text size="sm" fw={500}>
+      <Text size="sm" fw={300}>
         {module.displayUnit.amount} {module.displayUnit.symbol}
       </Text>
     );
 
     const currencyElement = (
-      <Badge color="blue" variant="light" radius="md" fw={700}>
+      <Badge color="blue" variant="light" radius="md" fw={400}>
         {module.displayCurrency.code}
       </Badge>
     );
@@ -87,7 +87,7 @@ export default function ModulesSection() {
     return (
       <Table.Tr key={module.serialNumber}>
         <Table.Td align="center">
-          <Text size="xs" ff="monospace" fw={600} style={{ backgroundColor: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', display: 'inline-block' }}>
+          <Text size="xs" ff="monospace" fw={300} style={{ backgroundColor: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', display: 'inline-block' }}>
             {module.serialNumber}
           </Text>
         </Table.Td>
@@ -104,7 +104,7 @@ export default function ModulesSection() {
   return (
     <Card p="xl" radius={32} shadow="sm">
       <Group mb="xl" gap="xs">
-        <Title order={3} size="h4" fw={700}>
+        <Title order={3} size="h4" fw={500}>
           Modules
         </Title>
         <Badge color="blue" variant="light" radius="xl" size="xs">

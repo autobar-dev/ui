@@ -9,7 +9,7 @@ export default function Wallet({ wallet }: {
   return (
     <Card p="xl" radius={32} shadow="sm">
       <Group mb="lg">
-        <Title order={3} size="h4" fw={700}>
+        <Title order={3} size="h4" fw={500}>
           Wallet
         </Title>
       </Group>
@@ -17,7 +17,7 @@ export default function Wallet({ wallet }: {
       <Table verticalSpacing="md">
         <Table.Tbody>
           <Table.Tr>
-            <Table.Td fw={700} w={120}>Wallet ID</Table.Td>
+            <Table.Td fw={400} w={120}>Wallet ID</Table.Td>
             <Table.Td>
               <Text size="sm" ff="monospace">
                 {wallet.id}
@@ -25,7 +25,7 @@ export default function Wallet({ wallet }: {
             </Table.Td>
           </Table.Tr>
           <Table.Tr>
-            <Table.Td fw={700}>Balance</Table.Td>
+            <Table.Td fw={400}>Balance</Table.Td>
             <Table.Td>
               <Text size="sm" ff="monospace">
                 {/* Balance formatting logic here if needed */}
@@ -34,7 +34,7 @@ export default function Wallet({ wallet }: {
             </Table.Td>
           </Table.Tr>
           <Table.Tr>
-            <Table.Td fw={700}>Currency</Table.Td>
+            <Table.Td fw={400}>Currency</Table.Td>
             <Table.Td>
               <Text size="sm" fs="italic">
                 {wallet.currencyCode}

@@ -10,7 +10,7 @@ export default function CurrenciesTable({ currencies }: {
 }) {
   const rows = currencies.map((currency) => {
     const symbolElement = currency.symbol ? (
-      <Text size="sm" fw={500}>
+      <Text size="sm" fw={300}>
         {currency.symbol}
       </Text>
     ) : (
@@ -25,13 +25,13 @@ export default function CurrenciesTable({ currencies }: {
       <Table.Tr key={currency.id}>
         <Table.Td>
           <Box style={{ display: 'flex', justifyContent: 'center' }}>
-            <Badge color="blue" variant="light" radius="md" fw={700}>
+            <Badge color="blue" variant="light" radius="md" fw={400}>
               {currency.code}
             </Badge>
           </Box>
         </Table.Td>
         <Table.Td>
-          <Text size="sm" fw={600}>
+          <Text size="sm" fw={300}>
             {currency.name}
           </Text>
         </Table.Td>
@@ -69,7 +69,7 @@ export default function CurrenciesTable({ currencies }: {
   return (
     <Card p="xl" radius={32} shadow="sm">
       <Group mb="lg" gap="xs">
-        <Title order={3} size="h4" fw={700}>
+        <Title order={3} size="h4" fw={500}>
           Currencies
         </Title>
         <Badge color="blue" variant="light" radius="xl" size="xs">

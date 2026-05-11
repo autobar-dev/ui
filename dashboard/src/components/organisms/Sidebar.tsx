@@ -68,7 +68,7 @@ export default function Sidebar() {
             marginBottom: '4px',
           },
           label: {
-            fontWeight: 600,
+            fontWeight: 400,
           }
         }}
       >
@@ -85,7 +85,7 @@ export default function Sidebar() {
                 marginBottom: '4px',
               },
               label: {
-                fontWeight: 500,
+                fontWeight: 300,
               }
             }}
           />

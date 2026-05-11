@@ -37,7 +37,7 @@ export default function AddCurrency() {
 
   return (
     <Card p="xl" radius={32} shadow="sm">
-      <Title order={3} size="h4" fw={700} mb="xl">
+      <Title order={3} size="h4" fw={500} mb="xl">
         Add New Currency
       </Title>
 
@@ -97,7 +97,7 @@ export default function AddCurrency() {
             size="md"
             radius="xl"
             px={40}
-            fw={700}
+            fw={400}
           >
             Create
           </Button>

@@ -53,7 +53,7 @@ export default function UserMenu({ user, role }: UserMenuProps) {
               {initials}
             </Avatar>
             <Box style={{ flex: 1 }}>
-              <Text size="sm" fw={600} visibleFrom="sm">
+              <Text size="sm" fw={300} visibleFrom="sm">
                 {fullName || user.email}
               </Text>
               <Badge
@@ -71,7 +71,7 @@ export default function UserMenu({ user, role }: UserMenuProps) {
 
       <Menu.Dropdown p="xs">
         <Box p="xs">
-          <Text size="sm" fw={700} c="slate.800">
+          <Text size="sm" fw={500} c="slate.800">
             {fullName || user.email}
           </Text>
           {fullName && (
@@ -95,7 +95,7 @@ export default function UserMenu({ user, role }: UserMenuProps) {
           color="red"
           leftSection={<HiArrowRightOnRectangle size={18} />}
           onClick={handleLogout}
-          fw={600}
+          fw={400}
         >
           Log out
         </Menu.Item>

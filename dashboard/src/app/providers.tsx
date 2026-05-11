@@ -35,6 +35,9 @@ const theme = createTheme({
   },
   fontFamily: 'inherit',
   defaultRadius: 'xl',
+  headings: {
+    fontWeight: '500',
+  },
   components: {
     Card: {
       defaultProps: {
@@ -137,7 +140,7 @@ export default function Providers({ children }: { children: ReactNode; }) {
     <MantineProvider theme={theme}>
       {repositoriesLoading ? (
         <div className="flex items-center justify-center h-screen bg-white">
-          <p className="text-blue-600 font-medium">Loading...</p>
+          <p className="text-blue-600">Loading...</p>
         </div>
       ) : (
         <RepositoriesContext.Provider value={{

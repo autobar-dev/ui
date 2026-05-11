@@ -43,7 +43,7 @@ export default function EnableCurrencyButton({ className, checkedInitial, curren
       radius="sm"
       variant="light"
       color={checked ? "green" : "gray"}
-      fw={700}
+      fw={400}
     >
       {checked ? "Enabled" : "Disabled"}
     </Button>

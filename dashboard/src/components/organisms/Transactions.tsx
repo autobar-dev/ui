@@ -21,7 +21,7 @@ export default function Transactions({ transactions }: {
         <TransactionTypeElement transaction_type={transaction.transactionType} />
       </Table.Td>
       <Table.Td align="right">
-        <Text size="sm" ff="monospace" fw={700}>
+        <Text size="sm" ff="monospace" fw={400}>
           {transaction.value}
         </Text>
       </Table.Td>
@@ -41,7 +41,7 @@ export default function Transactions({ transactions }: {
   return (
     <Card p="xl" radius={32} shadow="sm" mt="md">
       <Group mb="lg" gap="xs">
-        <Title order={3} size="h4" fw={700}>
+        <Title order={3} size="h4" fw={500}>
           Transactions
         </Title>
         <Badge color="gray" variant="light" radius="xl" size="xs">

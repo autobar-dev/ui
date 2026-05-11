@@ -55,7 +55,7 @@ export default function RateExchange({ enabledCurrencies, currencies }: {
   return (
     <Card p="xl" radius={32} shadow="sm">
       <Group justify="space-between" mb="xl">
-        <Title order={3} size="h4" fw={700}>
+        <Title order={3} size="h4" fw={500}>
           Rate Exchange
         </Title>
         <Box bg="slate.50" px="md" py="xs" style={{ borderRadius: '12px' }}>
@@ -64,7 +64,7 @@ export default function RateExchange({ enabledCurrencies, currencies }: {
             checked={onlyUseEnabled}
             onChange={(event) => setOnlyUseEnabled(event.currentTarget.checked)}
             size="sm"
-            fw={500}
+            fw={300}
           />
         </Box>
       </Group>
@@ -111,7 +111,7 @@ export default function RateExchange({ enabledCurrencies, currencies }: {
             radius="md"
             mb={2}
             px={24}
-            fw={700}
+            fw={400}
             style={{ boxShadow: '0 4px 12px -2px rgba(59, 130, 246, 0.2)' }}
           >
             Get Rate
@@ -124,10 +124,10 @@ export default function RateExchange({ enabledCurrencies, currencies }: {
           <Table verticalSpacing="md" horizontalSpacing="xl">
             <Table.Tbody>
               <Table.Tr style={{ backgroundColor: '#f8fafc' }}>
-                <Table.Td fw={600} w={180}>Current Rate</Table.Td>
+                <Table.Td fw={400} w={180}>Current Rate</Table.Td>
                 <Table.Td>
                   <Group gap="xs" align="baseline">
-                    <Text size="xl" fw={800} c="blue.6">
+                    <Text size="xl" fw={500} c="blue.6">
                       {formatFloat(rate.rate, 4)}
                     </Text>
                     <Text size="sm" c="dimmed">
@@ -137,7 +137,7 @@ export default function RateExchange({ enabledCurrencies, currencies }: {
                 </Table.Td>
               </Table.Tr>
               <Table.Tr>
-                <Table.Td fw={600}>Last Updated</Table.Td>
+                <Table.Td fw={400}>Last Updated</Table.Td>
                 <Table.Td>
                   <Badge color="gray" variant="light" radius="sm" ff="monospace">
                     {formatDate(new Date(rate.updated_at))}

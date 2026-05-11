@@ -5,7 +5,10 @@ import "./globals.css";
 import Providers from "./providers";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 
-const outfit = Outfit({ subsets: ['latin'] })
+const outfit = Outfit({ 
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700']
+})
 
 export const metadata = {
   title: "Autobar Dashboard",
