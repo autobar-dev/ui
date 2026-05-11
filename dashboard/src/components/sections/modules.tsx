@@ -1,7 +1,6 @@
 "use client";
 
-import { Badge, Card, Flex, Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow, Title, Text } from "@tremor/react";
-import { DashboardLightButton } from "../atoms/DashboardLightButton";
+import { Badge, Card, Table, Title, Text, Group, Button, ScrollArea, Center, Stack, Loader } from "@mantine/core";
 import { serviceModuleToModule } from "@/utils/module_utils";
 import { RepositoriesContext } from "@/contexts/RepositoriesContext";
 import { useContext, useEffect, useState } from "react";
@@ -33,87 +32,102 @@ export default function ModulesSection() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-slate-400 animate-pulse">Loading modules...</p>
-      </div>
+      <Center h={400}>
+        <Stack align="center" gap="xs">
+          <Loader size="lg" variant="dots" />
+          <Text size="sm" c="dimmed" fw={500}>Loading modules...</Text>
+        </Stack>
+      </Center>
     );
   }
 
+  const rows = modules.map((module) => {
+    const stationElement = module.stationId ? (
+      <Button variant="light" size="compact-xs" radius="md">
+        Station {module.stationId}
+      </Button>
+    ) : (
+      <Badge color="gray" variant="light" size="xs">None</Badge>
+    );
+
+    const productElement = module.productId ? (
+      <Button variant="light" size="compact-xs" radius="md">
+        Product {module.productId}
+      </Button>
+    ) : (
+      <Badge color="gray" variant="light" size="xs">None</Badge>
+    );
+
+    const unitElement = (
+      <Text size="sm" fw={500}>
+        {module.displayUnit.amount} {module.displayUnit.symbol}
+      </Text>
+    );
+
+    const currencyElement = (
+      <Badge color="blue" variant="light" radius="md" fw={700}>
+        {module.displayCurrency.code}
+      </Badge>
+    );
+
+    const pricesElement = module.prices.size > 0 ? (
+      <Button variant="light" size="compact-xs" radius="md">
+        See prices
+      </Button>
+    ) : (
+      <Badge color="gray" variant="light" size="xs">None</Badge>
+    );
+
+    const statusElement = module.enabled ? (
+      <Badge color="green" variant="light" radius="sm">ENABLED</Badge>
+    ) : (
+      <Badge color="red" variant="light" radius="sm">DISABLED</Badge>
+    );
+
+    return (
+      <Table.Tr key={module.serialNumber}>
+        <Table.Td align="center">
+          <Text size="xs" ff="monospace" fw={600} style={{ backgroundColor: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', display: 'inline-block' }}>
+            {module.serialNumber}
+          </Text>
+        </Table.Td>
+        <Table.Td align="center">{stationElement}</Table.Td>
+        <Table.Td align="center">{productElement}</Table.Td>
+        <Table.Td align="center">{unitElement}</Table.Td>
+        <Table.Td align="center">{currencyElement}</Table.Td>
+        <Table.Td align="center">{pricesElement}</Table.Td>
+        <Table.Td align="center">{statusElement}</Table.Td>
+      </Table.Tr>
+    );
+  });
+
   return (
-    <Card className="rounded-2xl shadow-sm border-none bg-white">
-      <Flex justifyContent="start" alignItems="center" className="space-x-3 mb-6">
-        <Title className="text-xl font-bold text-slate-800">Modules</Title>
-        <Badge size="xs" color="blue" className="rounded-full px-2.5">
+    <Card p="xl" radius={32} shadow="sm">
+      <Group mb="xl" gap="xs">
+        <Title order={3} size="h4" fw={700}>
+          Modules
+        </Title>
+        <Badge color="blue" variant="light" radius="xl" size="xs">
           {modules.length}
         </Badge>
-      </Flex>
+      </Group>
 
-      <Table>
-        <TableHead>
-          <TableRow className="border-b border-slate-100">
-            <TableHeaderCell className="text-slate-500 font-semibold uppercase text-xs tracking-wider text-center">Serial number</TableHeaderCell>
-            <TableHeaderCell className="text-slate-500 font-semibold uppercase text-xs tracking-wider text-center">Station</TableHeaderCell>
-            <TableHeaderCell className="text-slate-500 font-semibold uppercase text-xs tracking-wider text-center">Product</TableHeaderCell>
-            <TableHeaderCell className="text-slate-500 font-semibold uppercase text-xs tracking-wider text-center">Unit</TableHeaderCell>
-            <TableHeaderCell className="text-slate-500 font-semibold uppercase text-xs tracking-wider text-center">Currency</TableHeaderCell>
-            <TableHeaderCell className="text-slate-500 font-semibold uppercase text-xs tracking-wider text-center">Prices</TableHeaderCell>
-            <TableHeaderCell className="text-slate-500 font-semibold uppercase text-xs tracking-wider text-center">Status</TableHeaderCell>
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {modules.map((module, index) => {
-            const stationElement = module.stationId ? (
-              <DashboardLightButton label={`Station ${module.stationId}`} />
-            ) : (
-              <Badge color="slate" size="xs" className="opacity-60 bg-slate-100 text-slate-500 border-none">None</Badge>
-            );
-            const productElement = module.productId ? (
-              <DashboardLightButton label={`Product ${module.productId}`} />
-            ) : (
-              <Badge color="slate" size="xs" className="opacity-60 bg-slate-100 text-slate-500 border-none">None</Badge>
-            );
-            const unitElement = (
-              <Text className="text-slate-700 font-medium">
-                {module.displayUnit.amount} {module.displayUnit.symbol}
-              </Text>
-            );
-            const currencyElement = (
-              <Badge color="blue" size="xs" className="font-mono px-2 rounded-md">
-                {module.displayCurrency.code}
-              </Badge>
-            );
-            const pricesElement = module.prices.size > 0 ? (
-              <DashboardLightButton label="See prices" />
-            ) : (
-              <Badge color="slate" size="xs" className="opacity-60 bg-slate-100 text-slate-500 border-none">None</Badge>
-            );
-            const statusElement = module.enabled ? (
-              <Badge color="green" size="xs" className="rounded-md px-2">ENABLED</Badge>
-            ) : (
-              <Badge color="rose" size="xs" className="rounded-md px-2">DISABLED</Badge>
-            );
-
-            const rowBgClass = index % 2 === 1 ? "bg-slate-50/50" : "bg-transparent";
-
-            return (
-              <TableRow key={`module-table-row-${module.serialNumber}`} className={`${rowBgClass} hover:bg-slate-100/50 transition-colors`}>
-                <TableCell className="text-center">
-                  <Text className="font-mono text-slate-700 bg-slate-100 px-2 py-1 rounded-md inline-block text-xs font-semibold border border-slate-200 shadow-sm">
-                    {module.serialNumber}
-                  </Text>
-                </TableCell>
-                <TableCell className="text-center">{stationElement}</TableCell>
-                <TableCell className="text-center">{productElement}</TableCell>
-                <TableCell className="text-center">{unitElement}</TableCell>
-                <TableCell className="text-center">{currencyElement}</TableCell>
-                <TableCell className="text-center">{pricesElement}</TableCell>
-                <TableCell className="text-center">{statusElement}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+      <ScrollArea>
+        <Table verticalSpacing="md" striped highlightOnHover>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th style={{ textAlign: 'center' }}>Serial number</Table.Th>
+              <Table.Th style={{ textAlign: 'center' }}>Station</Table.Th>
+              <Table.Th style={{ textAlign: 'center' }}>Product</Table.Th>
+              <Table.Th style={{ textAlign: 'center' }}>Unit</Table.Th>
+              <Table.Th style={{ textAlign: 'center' }}>Currency</Table.Th>
+              <Table.Th style={{ textAlign: 'center' }}>Prices</Table.Th>
+              <Table.Th style={{ textAlign: 'center' }}>Status</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      </ScrollArea>
     </Card>
   );
 }

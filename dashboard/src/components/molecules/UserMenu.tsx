@@ -3,10 +3,10 @@
 /**
  * UI module for the user avatar dropdown menu.
  */
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext } from "react";
 import { HiArrowRightOnRectangle } from "react-icons/hi2";
+import { Menu, Avatar, UnstyledButton, Group, Text, Box, Badge, Divider } from "@mantine/core";
 
-import UserAvatar from "@/components/atoms/UserAvatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { RepositoriesContext } from "@/contexts/RepositoriesContext";
 import { type User } from "@/types/user";
@@ -30,86 +30,76 @@ type UserMenuProps = {
 export default function UserMenu({ user, role }: UserMenuProps) {
   const { logout } = useAuth();
   const { authRepository } = useContext(RepositoriesContext);
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const fullName = `${user.first_name} ${user.last_name}`.trim();
   const initials = getInitials(user);
   const roleLabel = role === "admin" ? "Admin" : "User";
 
-  useEffect(() => {
-    const handleDocumentClick = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (containerRef.current && !containerRef.current.contains(target)) {
-        setIsOpen(false);
-      }
-    };
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleDocumentClick);
-    document.addEventListener("keydown", handleEscape);
-
-    return () => {
-      document.removeEventListener("mousedown", handleDocumentClick);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, []);
-
   const handleLogout = () => {
-    setIsOpen(false);
     logout(authRepository);
   };
 
   return (
-    <div className="relative" ref={containerRef}>
-      <UserAvatar
-        initials={initials}
-        role={role}
-        title={fullName ? `${fullName} • ${roleLabel}` : `${user.email} • ${roleLabel}`}
-        onClick={() => setIsOpen((prev) => !prev)}
-        ariaExpanded={isOpen}
-      />
-
-      {isOpen && (
-        <div
-          className="absolute right-0 top-12 z-50 min-w-[220px] rounded-xl border border-slate-100 bg-white py-2 shadow-lg"
-          role="menu"
-        >
-          <div className="px-4 py-2">
-            <p className="text-sm font-semibold text-slate-800">
-              {fullName || user.email}
-            </p>
-            {fullName && (
-              <p className="text-xs text-slate-500">{user.email}</p>
-            )}
-            <span
-              className={`mt-2 inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${role === "admin"
-                ? "bg-amber-100 text-amber-700"
-                : "bg-slate-100 text-slate-600"
-                }`}
+    <Menu shadow="md" width={240} position="bottom-end" transitionProps={{ transition: 'pop-top-right' }} radius="md">
+      <Menu.Target>
+        <UnstyledButton>
+          <Group gap="xs">
+            <Avatar
+              radius="xl"
+              size="md"
+              color={role === 'admin' ? 'blue' : 'gray'}
+              variant="light"
             >
-              {roleLabel}
-            </span>
-          </div>
+              {initials}
+            </Avatar>
+            <Box style={{ flex: 1 }}>
+              <Text size="sm" fw={600} visibleFrom="sm">
+                {fullName || user.email}
+              </Text>
+              <Badge
+                size="xs"
+                variant="light"
+                color={role === 'admin' ? 'blue' : 'gray'}
+                visibleFrom="sm"
+              >
+                {roleLabel}
+              </Badge>
+            </Box>
+          </Group>
+        </UnstyledButton>
+      </Menu.Target>
 
-          <div className="my-2 border-t border-slate-100" />
-
-          <button
-            type="button"
-            role="menuitem"
-            onClick={handleLogout}
-            className="flex w-full items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 hover:text-red-500"
+      <Menu.Dropdown p="xs">
+        <Box p="xs">
+          <Text size="sm" fw={700} c="slate.800">
+            {fullName || user.email}
+          </Text>
+          {fullName && (
+            <Text size="xs" c="dimmed">
+              {user.email}
+            </Text>
+          )}
+          <Badge
+            mt="xs"
+            size="sm"
+            variant="light"
+            color={role === 'admin' ? 'amber' : 'slate'}
           >
-            <HiArrowRightOnRectangle className="text-lg" />
-            Log out
-          </button>
-        </div>
-      )}
-    </div>
+            {roleLabel}
+          </Badge>
+        </Box>
+
+        <Divider my="xs" />
+
+        <Menu.Item
+          color="red"
+          leftSection={<HiArrowRightOnRectangle size={18} />}
+          onClick={handleLogout}
+          fw={600}
+        >
+          Log out
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Grid } from "@tremor/react";
+import { Stack, Center, Loader, Text } from "@mantine/core";
 import CurrenciesTable from "../organisms/CurrenciesTable";
 import AddCurrency from "../organisms/AddCurrency";
 import { useContext, useEffect, useState } from "react";
@@ -25,17 +25,19 @@ export default function CurrenciesSection() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-slate-400 animate-pulse">Loading currencies...</p>
-      </div>
+      <Center h={400}>
+        <Stack align="center" gap="xs">
+          <Loader size="lg" variant="dots" />
+          <Text size="sm" c="dimmed" fw={500}>Loading currencies...</Text>
+        </Stack>
+      </Center>
     );
   }
 
   return (
-    <Grid numItems={1} className="gap-8">
+    <Stack gap="xl">
       <CurrenciesTable currencies={currencies} />
-      
       <AddCurrency />
-    </Grid>
+    </Stack>
   );
 }

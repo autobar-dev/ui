@@ -1,7 +1,7 @@
 "use client";
 
 import { RepositoriesContext } from "@/contexts/RepositoriesContext";
-import { Card, Title, TextInput, Flex, Text } from "@tremor/react";
+import { Card, Title, TextInput, Text, Group, Button, SimpleGrid, NumberInput } from "@mantine/core";
 import { useState, useContext } from "react";
 import { HiTag, HiIdentification, HiHashtag, HiCalculator } from "react-icons/hi2";
 
@@ -11,7 +11,7 @@ export default function AddCurrency() {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
-  const [minorUnitDivisor, setMinorUnitDivisor] = useState<string>("100");
+  const [minorUnitDivisor, setMinorUnitDivisor] = useState<number | string>(100);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,13 +20,13 @@ export default function AddCurrency() {
 
     try {
       // Placeholder for actual request
-      console.log("Creating currency:", { code, name, symbol, minorUnitDivisor: parseInt(minorUnitDivisor) });
+      console.log("Creating currency:", { code, name, symbol, minorUnitDivisor: Number(minorUnitDivisor) });
       
       // Reset form
       setCode("");
       setName("");
       setSymbol("");
-      setMinorUnitDivisor("100");
+      setMinorUnitDivisor(100);
       alert(`Currency ${code} added successfully! (Logic placeholder)`);
     } catch (error) {
       console.error("Failed to create currency", error);
@@ -36,74 +36,72 @@ export default function AddCurrency() {
   };
 
   return (
-    <Card className="rounded-2xl shadow-sm border-none bg-white p-8">
-      <Flex justifyContent="start" alignItems="center" className="mb-8">
-        <Title className="text-xl font-bold text-slate-800">Add New Currency</Title>
-      </Flex>
+    <Card p="xl" radius={32} shadow="sm">
+      <Title order={3} size="h4" fw={700} mb="xl">
+        Add New Currency
+      </Title>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div>
-            <Text className="mb-2 ml-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Currency Code</Text>
-            <TextInput
-              icon={HiTag}
-              placeholder="e.g. USD"
-              value={code}
-              onChange={(e) => setCode(e.target.value.toUpperCase())}
-              required
-              className="rounded-xl border-slate-200"
-              maxLength={3}
-            />
-          </div>
+      <form onSubmit={handleSubmit}>
+        <SimpleGrid cols={{ base: 1, md: 2, lg: 4 }} spacing="lg">
+          <TextInput
+            label="Currency Code"
+            description="e.g. USD"
+            placeholder="USD"
+            leftSection={<HiTag size={18} />}
+            value={code}
+            onChange={(e) => setCode(e.target.value.toUpperCase())}
+            required
+            maxLength={3}
+            radius="md"
+          />
 
-          <div>
-            <Text className="mb-2 ml-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Full Name</Text>
-            <TextInput
-              icon={HiIdentification}
-              placeholder="e.g. US Dollar"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="rounded-xl border-slate-200"
-            />
-          </div>
+          <TextInput
+            label="Full Name"
+            description="e.g. US Dollar"
+            placeholder="US Dollar"
+            leftSection={<HiIdentification size={18} />}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            radius="md"
+          />
 
-          <div>
-            <Text className="mb-2 ml-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Symbol</Text>
-            <TextInput
-              icon={HiHashtag}
-              placeholder="e.g. $"
-              value={symbol}
-              onChange={(e) => setSymbol(e.target.value)}
-              className="rounded-xl border-slate-200"
-              maxLength={5}
-            />
-          </div>
+          <TextInput
+            label="Symbol"
+            description="e.g. $"
+            placeholder="$"
+            leftSection={<HiHashtag size={18} />}
+            value={symbol}
+            onChange={(e) => setSymbol(e.target.value)}
+            maxLength={5}
+            radius="md"
+          />
 
-          <div>
-            <Text className="mb-2 ml-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Minor Unit Divisor</Text>
-            <TextInput
-              icon={HiCalculator}
-              type="number"
-              placeholder="e.g. 100"
-              value={minorUnitDivisor}
-              onChange={(e) => setMinorUnitDivisor(e.target.value)}
-              required
-              className="rounded-xl border-slate-200"
-              min="1"
-            />
-          </div>
-        </div>
+          <NumberInput
+            label="Minor Unit Divisor"
+            description="e.g. 100"
+            placeholder="100"
+            leftSection={<HiCalculator size={18} />}
+            value={minorUnitDivisor}
+            onChange={setMinorUnitDivisor}
+            required
+            min={1}
+            radius="md"
+          />
+        </SimpleGrid>
 
-        <div className="flex justify-end pt-4 border-t border-slate-50">
-          <button
+        <Group justify="flex-end" mt="xl" pt="xl" style={{ borderTop: '1px solid #f8fafc' }}>
+          <Button
             type="submit"
-            disabled={isLoading}
-            className="px-12 py-3 rounded-[20px] text-base font-bold bg-[#3B82F6] hover:bg-[#2563EB] text-white transition-all active:scale-95 cursor-pointer border-none shadow-md hover:shadow-blue-200 flex justify-center items-center"
+            loading={isLoading}
+            size="md"
+            radius="xl"
+            px={40}
+            fw={700}
           >
-            {isLoading ? "Creating..." : "Create"}
-          </button>
-        </div>
+            Create
+          </Button>
+        </Group>
       </form>
     </Card>
   );

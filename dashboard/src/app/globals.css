@@ -1,68 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-tremor-brand-faint: #eff6ff;
-  --color-tremor-brand-muted: #bfdbfe;
-  --color-tremor-brand-subtle: #9ac0ff;
-  --color-tremor-brand-default: #3b82f6;
-  --color-tremor-brand-emphasis: #1d4ed8;
-  --color-tremor-brand-inverted: #ffffff;
+  --color-brand-faint: #eff6ff;
+  --color-brand-muted: #bfdbfe;
+  --color-brand-subtle: #9ac0ff;
+  --color-brand-default: #3b82f6;
+  --color-brand-emphasis: #1d4ed8;
+  --color-brand-inverted: #ffffff;
 
-  --color-tremor-background-muted: #f9fafb;
-  --color-tremor-background-subtle: #f3f4f6;
-  --color-tremor-background-default: #ffffff;
-  --color-tremor-background-emphasis: #374151;
+  --color-background-muted: #f9fafb;
+  --color-background-subtle: #f3f4f6;
+  --color-background-default: #ffffff;
+  --color-background-emphasis: #374151;
 
-  --color-tremor-border-default: #e2e8f0;
-  --color-tremor-ring-default: #e2e8f0;
+  --color-border-default: #e2e8f0;
+  --color-ring-default: #e2e8f0;
 
-  --color-tremor-content-subtle: #9ca3af;
-  --color-tremor-content-default: #6b7280;
-  --color-tremor-content-emphasis: #374151;
-  --color-tremor-content-strong: #111827;
-  --color-tremor-content-inverted: #ffffff;
-
-  /* Dark mode */
-  --color-dark-tremor-brand-faint: #0B1229;
-  --color-dark-tremor-brand-muted: #172554;
-  --color-dark-tremor-brand-subtle: #1e40af;
-  --color-dark-tremor-brand-default: #3b82f6;
-  --color-dark-tremor-brand-emphasis: #60a5fa;
-  --color-dark-tremor-brand-inverted: #030712;
-
-  --color-dark-tremor-background-muted: #131A2B;
-  --color-dark-tremor-background-subtle: #1f2937;
-  --color-dark-tremor-background-default: #111827;
-  --color-dark-tremor-background-emphasis: #d1d5db;
-
-  --color-dark-tremor-border-default: #1f2937;
-  --color-dark-tremor-ring-default: #1f2937;
-
-  --color-dark-tremor-content-subtle: #4b5563;
-  --color-dark-tremor-content-default: #6b7280;
-  --color-dark-tremor-content-emphasis: #e5e7eb;
-  --color-dark-tremor-content-strong: #f9fafb;
-  --color-dark-tremor-content-inverted: #000000;
-
-  --shadow-tremor-input: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-tremor-card: 0 4px 20px -5px rgb(0 0 0 / 0.05);
-  --shadow-tremor-dropdown: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-
-  --shadow-dark-tremor-input: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-dark-tremor-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-dark-tremor-dropdown: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-
-  --radius-tremor-small: 0.5rem;
-  --radius-tremor-default: 1.25rem;
-  --radius-tremor-full: 9999px;
-
-  --font-size-tremor-label: 0.75rem;
-  --font-size-tremor-default: 0.875rem;
-  --line-height-tremor-default: 1.25rem;
-  --font-size-tremor-title: 1.25rem;
-  --line-height-tremor-title: 1.75rem;
-  --font-size-tremor-metric: 2.25rem;
-  --line-height-tremor-metric: 2.5rem;
+  --color-content-subtle: #9ca3af;
+  --color-content-default: #6b7280;
+  --color-content-emphasis: #374151;
+  --color-content-strong: #111827;
+  --color-content-inverted: #ffffff;
 }
 
 @layer base {
@@ -83,38 +41,5 @@
   button,
   .cursor-pointer {
     cursor: pointer !important;
-  }
-}
-
-@layer components {
-
-  /* Override Tremor component defaults for more roundedness */
-  .tremor-Card-root {
-    border-radius: 1.5rem !important;
-  }
-
-  .tremor-Button-root {
-    border-radius: 0.75rem !important;
-    cursor: pointer !important;
-  }
-
-  .tremor-TextInput-root {
-    border-radius: 0.75rem !important;
-    border-color: #e2e8f0 !important;
-    padding: 0.125rem 0 !important;
-  }
-
-  .tremor-TextInput-icon {
-    margin-left: 1rem !important;
-    /* Move icon further right from the left edge */
-    color: #94a3b8 !important;
-    /* light gray (slate-400) like the eye icon */
-  }
-
-  .tremor-TextInput-input {
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
-    padding-left: 3rem !important;
-    /* Slightly more padding for the more right-positioned icon */
   }
 }

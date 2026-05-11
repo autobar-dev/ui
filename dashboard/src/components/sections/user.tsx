@@ -1,5 +1,5 @@
 import { WalletRepository } from "@/repositories/WalletRepository";
-import { Grid } from "@tremor/react";
+import { Stack } from "@mantine/core";
 import Wallet from "@/components/organisms/Wallet";
 import { serviceTransactionToTransaction, serviceWalletToWallet } from "@/utils/wallet_utils";
 import Transactions from "../organisms/Transactions";
@@ -16,9 +16,9 @@ export default async function UserSection({ email }: {
   const allTransactions = serviceAllTransactions.map(serviceTransactionToTransaction);
 
   return (
-    <Grid>
+    <Stack gap="xl">
       <Wallet wallet={wallet} />
       <Transactions transactions={allTransactions} />
-    </Grid>
+    </Stack>
   );
 }

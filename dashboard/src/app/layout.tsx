@@ -1,7 +1,9 @@
 import Shell from "@/components/organisms/Shell";
 import { Outfit } from "next/font/google";
+import "@mantine/core/styles.css";
 import "./globals.css";
 import Providers from "./providers";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 
 const outfit = Outfit({ subsets: ['latin'] })
 
@@ -16,7 +18,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ColorSchemeScript />
+      </head>
       <body className={outfit.className}>
         <Providers>
           {children}

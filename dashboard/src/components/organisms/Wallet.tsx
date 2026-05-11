@@ -1,36 +1,47 @@
-import { CurrencyRepository } from "@/repositories/CurrencyRepository";
-import type { Wallet as WalletType } from "@/types/wallet";
-import { Card, Flex, Table, TableBody, TableCell, TableRow, Title } from "@tremor/react";
+"use client";
 
-export default async function Wallet({ wallet }: {
+import type { Wallet as WalletType } from "@/types/wallet";
+import { Card, Table, Title, Text, Group, Box } from "@mantine/core";
+
+export default function Wallet({ wallet }: {
   wallet: WalletType,
 }) {
-  // const currencyRepository = new CurrencyRepository("http://localhost:9000/currency");
-
-  // const serviceCurrency = await currencyRepository.get(wallet.currencyCode);
-  // const currency = serviceCurrencyToCurrency(serviceCurrency);
-
   return (
-    <Card>
-      <Flex justifyContent="start" className="space-x-2">
-        <Title>Wallet</Title>
-      </Flex>
+    <Card p="xl" radius={32} shadow="sm">
+      <Group mb="lg">
+        <Title order={3} size="h4" fw={700}>
+          Wallet
+        </Title>
+      </Group>
 
-      <Table className="mt-6">
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-bold">Wallet ID</TableCell>
-            <TableCell className="font-mono">{wallet.id}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-bold">Balance</TableCell>
-            {/* <TableCell className="font-mono">{`${(wallet.balance / currency.minorUnitDivisor).toFixed(Math.log10(currency.minorUnitDivisor))}`}</TableCell> */}
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-bold">Currency</TableCell>
-            {/* <TableCell className="italic">{`${wallet.currencyCode} (${currency.enabled ? "enabled" : "disabled"})`}</TableCell> */}
-          </TableRow>
-        </TableBody>
+      <Table verticalSpacing="md">
+        <Table.Tbody>
+          <Table.Tr>
+            <Table.Td fw={700} w={120}>Wallet ID</Table.Td>
+            <Table.Td>
+              <Text size="sm" ff="monospace">
+                {wallet.id}
+              </Text>
+            </Table.Td>
+          </Table.Tr>
+          <Table.Tr>
+            <Table.Td fw={700}>Balance</Table.Td>
+            <Table.Td>
+              <Text size="sm" ff="monospace">
+                {/* Balance formatting logic here if needed */}
+                {wallet.balance}
+              </Text>
+            </Table.Td>
+          </Table.Tr>
+          <Table.Tr>
+            <Table.Td fw={700}>Currency</Table.Td>
+            <Table.Td>
+              <Text size="sm" fs="italic">
+                {wallet.currencyCode}
+              </Text>
+            </Table.Td>
+          </Table.Tr>
+        </Table.Tbody>
       </Table>
     </Card>
   );

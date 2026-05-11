@@ -10,6 +10,7 @@ import { RepositoriesContext } from "@/contexts/RepositoriesContext";
 import { useContext, useEffect, useState } from "react";
 import { type User } from "@/types/user";
 import { type IsValidData } from "@/types/auth";
+import { Group, Box } from "@mantine/core";
 
 /**
  * Renders the dashboard header with user avatar and menu.
@@ -51,10 +52,12 @@ export default function Header() {
   }, [apiClient, authRepository, userRepository]);
 
   return (
-    <header className="bg-white w-full h-20 fixed left-0 top-0 border-b border-slate-100 flex items-center justify-between z-50 px-8 shadow-sm">
-      <Logo withTextClassName="h-10" />
+    <Box h="100%" px="xl" style={{ borderBottom: '1px solid #f1f5f9' }}>
+      <Group justify="space-between" h="100%">
+        <Logo withTextClassName="h-10" />
 
-      {user && role && <UserMenu user={user} role={role} />}
-    </header>
+        {user && role && <UserMenu user={user} role={role} />}
+      </Group>
+    </Box>
   );
 }

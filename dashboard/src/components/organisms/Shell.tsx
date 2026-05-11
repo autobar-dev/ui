@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import { AppShell, Container } from "@mantine/core";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
@@ -8,16 +9,32 @@ export default function Shell({ children }: {
   children: ReactNode,
 }) {
   return (
-    <>
-      <Header />
-      <div className="flex flex-row mt-20 h-[calc(100vh-5rem)]">
+    <AppShell
+      header={{ height: 80 }}
+      navbar={{
+        width: 260,
+        breakpoint: 'sm',
+      }}
+      padding="xl"
+      styles={{
+        main: {
+          backgroundColor: '#f8fafc',
+        }
+      }}
+    >
+      <AppShell.Header>
+        <Header />
+      </AppShell.Header>
+
+      <AppShell.Navbar>
         <Sidebar />
-        <main className="flex-1 overflow-y-auto p-8 bg-slate-50">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
-        </main>
-      </div>
-    </>
+      </AppShell.Navbar>
+
+      <AppShell.Main>
+        <Container size="xl" pt="xl">
+          {children}
+        </Container>
+      </AppShell.Main>
+    </AppShell>
   );
 }

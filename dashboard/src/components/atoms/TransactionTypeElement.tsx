@@ -1,41 +1,44 @@
+"use client";
+
 import { TransactionType } from "@/types/transaction";
-import { Badge } from "@tremor/react";
+import { Badge } from "@mantine/core";
 import { ReactNode } from "react";
 
 export default function TransactionTypeElement({ transaction_type }: {
   transaction_type: TransactionType
 }) {
-  let element: ReactNode;
+  let color: string;
+  let label: string;
 
   switch (transaction_type) {
     case TransactionType.Deposit:
-      element = (
-        <Badge color="emerald">Deposit</Badge>
-      );
+      color = "green";
+      label = "Deposit";
       break;
     case TransactionType.Withdraw:
-      element = (
-        <Badge color="fuchsia">Withdraw</Badge>
-      );
+      color = "grape";
+      label = "Withdraw";
       break;
     case TransactionType.Purchase:
-      element = (
-        <Badge color="blue">Purchase</Badge>
-      );
+      color = "blue";
+      label = "Purchase";
       break;
     case TransactionType.Refund:
-      element = (
-        <Badge color="orange">Refund</Badge>
-      );
+      color = "orange";
+      label = "Refund";
       break;
     case TransactionType.CurrencyChange:
-      element = (
-        <Badge color="purple">Currency change</Badge>
-      );
+      color = "violet";
+      label = "Currency change";
       break;
+    default:
+      color = "gray";
+      label = "Unknown";
   }
 
   return (
-    element
+    <Badge color={color} variant="light" radius="sm">
+      {label}
+    </Badge>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
-import SidebarItem from "../atoms/SidebarItem";
-import { usePathname } from "next/navigation";
-import { HiCube, HiCurrencyDollar, HiUsers, HiCpuChip } from "react-icons/hi2";
+import { usePathname, useRouter } from "next/navigation";
+import { HiCube, HiCurrencyDollar, HiUsers, HiCpuChip, HiTag } from "react-icons/hi2";
 import { ReactNode } from "react";
+import { NavLink, Box, ScrollArea } from "@mantine/core";
 
 export type SidebarItemContent = {
   path: string,
@@ -16,50 +16,89 @@ const items: SidebarItemContent[] = [
   {
     path: "/users",
     label: "Users",
-    icon: (
-      <HiUsers className="mr-2 text-xl inline-block" />
-    ),
+    icon: <HiUsers size={20} />,
+  },
+  {
+    path: "/products",
+    label: "Products",
+    icon: <HiTag size={20} />,
   },
   {
     path: "/modules",
     label: "Modules",
-    icon: (
-      <HiCube className="mr-2 text-xl inline-block" />
-    ),
+    icon: <HiCube size={20} />,
     children: [
       {
         path: "/modules/firmware",
         label: "Firmware",
-        icon: (
-          <HiCpuChip className="mr-2 text-xl inline-block" />
-        ),
+        icon: <HiCpuChip size={20} />,
       }
     ]
   },
   {
     path: "/currencies",
     label: "Currencies",
-    icon: (
-      <HiCurrencyDollar className="mr-2 text-xl inline-block" />
-    ),
+    icon: <HiCurrencyDollar size={20} />,
   },
 ];
 
 export default function Sidebar() {
-  const path = usePathname();
+  const pathname = usePathname();
+  const router = useRouter();
 
-  return (
-    <nav className="h-full w-64 left-0 bg-white pt-6 px-4 flex flex-col border-r border-slate-100 shadow-sm">
-      <div className="space-y-1">
-        {items.map(item => (
-          <SidebarItem
-            item={item}
-            key={`sidebar-item-${item.path}`}
-            active={path === item.path || (item.children?.some(c => path === c.path) ?? false)}
-            currentPath={path}
+  const renderItem = (item: SidebarItemContent) => {
+    const active = pathname === item.path || (item.children?.some(c => pathname === c.path) ?? false);
+
+    return (
+      <NavLink
+        key={item.path}
+        label={item.label}
+        leftSection={item.icon}
+        active={active}
+        onClick={() => {
+          if (!item.children) {
+            router.push(item.path);
+          }
+        }}
+        childrenOffset={28}
+        variant="filled"
+        styles={{
+          root: {
+            borderRadius: '12px',
+            marginBottom: '4px',
+          },
+          label: {
+            fontWeight: 600,
+          }
+        }}
+      >
+        {item.children?.map(child => (
+          <NavLink
+            key={child.path}
+            label={child.label}
+            leftSection={child.icon}
+            active={pathname === child.path}
+            onClick={() => router.push(child.path)}
+            styles={{
+              root: {
+                borderRadius: '12px',
+                marginBottom: '4px',
+              },
+              label: {
+                fontWeight: 500,
+              }
+            }}
           />
         ))}
-      </div>
-    </nav>
+      </NavLink>
+    );
+  };
+
+  return (
+    <Box h="100%" p="md" style={{ borderRight: '1px solid #f1f5f9' }}>
+      <ScrollArea h="100%">
+        {items.map(renderItem)}
+      </ScrollArea>
+    </Box>
   );
 }

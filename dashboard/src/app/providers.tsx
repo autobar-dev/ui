@@ -12,6 +12,58 @@ import { CurrencyRepository } from '@/repositories/CurrencyRepository';
 import { UserRepository } from "@/repositories/UserRepository";
 import { ModuleRepository } from "@/repositories/ModuleRepository";
 import { Tokens } from "@/types/auth";
+import { ProductRepository } from '@/repositories/ProductRepository';
+import { MantineProvider, createTheme, MantineColorsTuple } from '@mantine/core';
+
+const myColor: MantineColorsTuple = [
+  '#eff6ff',
+  '#dbeafe',
+  '#bfdbfe',
+  '#93c5fd',
+  '#60a5fa',
+  '#3b82f6',
+  '#2563eb',
+  '#1d4ed8',
+  '#1e40af',
+  '#1e3a8a',
+];
+
+const theme = createTheme({
+  primaryColor: 'blue',
+  colors: {
+    blue: myColor,
+  },
+  fontFamily: 'inherit',
+  defaultRadius: 'xl',
+  components: {
+    Card: {
+      defaultProps: {
+        radius: '32px',
+        withBorder: false,
+      },
+      styles: {
+        root: {
+          boxShadow: '0 4px 20px -5px rgb(0 0 0 / 0.05)',
+        }
+      }
+    },
+    Button: {
+      defaultProps: {
+        radius: 'xl',
+      }
+    },
+    TextInput: {
+      defaultProps: {
+        radius: 'xl',
+      }
+    },
+    PasswordInput: {
+      defaultProps: {
+        radius: 'xl',
+      }
+    }
+  }
+});
 
 function AuthWrapper({ children }: { children: ReactNode; }) {
   const { isAuthenticated, tokens, setTokens } = useAuth();
@@ -50,6 +102,7 @@ export default function Providers({ children }: { children: ReactNode; }) {
   const [currencyRepository, setCurrencyRepository] = useState<CurrencyRepository>();
   const [userRepository, setUserRepository] = useState<UserRepository>();
   const [moduleRepository, setModuleRepository] = useState<ModuleRepository>();
+  const [productRepository, setProductRepository] = useState<ProductRepository>();
 
   useEffect(() => {
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
@@ -59,12 +112,14 @@ export default function Providers({ children }: { children: ReactNode; }) {
     const currencyRepository = new CurrencyRepository("/currency", apiClient);
     const userRepository = new UserRepository("/user", apiClient);
     const moduleRepository = new ModuleRepository("/module", apiClient);
+    const productRepository = new ProductRepository("/product", apiClient);
 
     setApiClient(apiClient);
     setAuthRepository(authRepository);
     setCurrencyRepository(currencyRepository);
     setUserRepository(userRepository);
     setModuleRepository(moduleRepository);
+    setProductRepository(productRepository);
   }, []);
 
   useEffect(() => {
@@ -73,15 +128,16 @@ export default function Providers({ children }: { children: ReactNode; }) {
       !!authRepository &&
       !!currencyRepository &&
       !!userRepository &&
-      !!moduleRepository
+      !!moduleRepository &&
+      !!productRepository
     ));
-  }, [apiClient, authRepository, currencyRepository, userRepository, moduleRepository]);
+  }, [apiClient, authRepository, currencyRepository, userRepository, moduleRepository, productRepository]);
 
   return (
-    <>
+    <MantineProvider theme={theme}>
       {repositoriesLoading ? (
         <div className="flex items-center justify-center h-screen bg-white">
-          <p className="text-tremor-brand font-medium">Loading...</p>
+          <p className="text-blue-600 font-medium">Loading...</p>
         </div>
       ) : (
         <RepositoriesContext.Provider value={{
@@ -90,6 +146,7 @@ export default function Providers({ children }: { children: ReactNode; }) {
           currencyRepository: currencyRepository!,
           userRepository: userRepository!,
           moduleRepository: moduleRepository!,
+          productRepository: productRepository!,
         }}>
           <AuthProvider>
             <AuthWrapper>
@@ -104,6 +161,6 @@ export default function Providers({ children }: { children: ReactNode; }) {
         options={{ showSpinner: false }}
         shallowRouting
       />
-    </>
+    </MantineProvider>
   );
 }
