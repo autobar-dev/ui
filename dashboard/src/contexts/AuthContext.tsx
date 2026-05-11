@@ -1,13 +1,17 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
-import { Tokens } from "@/types/auth";
+import { createContext, useContext, useState, ReactNode, useMemo } from "react";
+import { IsValidData, Tokens, UserRole } from "@/types/auth";
 import { AuthRepository } from "@/repositories/AuthRepository";
+import { decodeJWT } from "@/utils/auth";
+
+const ALLOWED_ROLES: UserRole[] = ["admin", "owner", "maintainer"];
 
 type AuthContextValues = {
   tokens: Tokens | null;
   setTokens: (tokens: Tokens | null) => void;
   isAuthenticated: boolean;
+  role: UserRole | null;
   logout: (authRepository: AuthRepository) => void;
 };
 
@@ -18,13 +22,21 @@ const AuthContext = createContext<AuthContextValues | undefined>(undefined);
  */
 export function AuthProvider({ children }: { children: ReactNode; }) {
   const [tokens, setTokensState] = useState<Tokens | null>(() => {
+    if (typeof window === "undefined") return null;
+    
     const savedTokens = localStorage.getItem("auth_tokens");
     if (!savedTokens) {
       return null;
     }
 
     try {
-      return JSON.parse(savedTokens) as Tokens;
+      const parsed = JSON.parse(savedTokens) as Tokens;
+      const decoded = decodeJWT<IsValidData>(parsed.accessToken);
+      if (decoded && !ALLOWED_ROLES.includes(decoded.rol)) {
+        localStorage.removeItem("auth_tokens");
+        return null;
+      }
+      return parsed;
     } catch (e) {
       console.error("Failed to parse saved tokens", e);
       return null;
@@ -32,10 +44,16 @@ export function AuthProvider({ children }: { children: ReactNode; }) {
   });
 
   const setTokens = (newTokens: Tokens | null) => {
-    setTokensState(newTokens);
     if (newTokens) {
+      const decoded = decodeJWT<IsValidData>(newTokens.accessToken);
+      if (decoded && !ALLOWED_ROLES.includes(decoded.rol)) {
+        throw new Error("You do not have permission to access the dashboard.");
+      }
+      
+      setTokensState(newTokens);
       localStorage.setItem("auth_tokens", JSON.stringify(newTokens));
     } else {
+      setTokensState(null);
       localStorage.removeItem("auth_tokens");
     }
   };
@@ -48,8 +66,14 @@ export function AuthProvider({ children }: { children: ReactNode; }) {
 
   const isAuthenticated = !!tokens;
 
+  const role = useMemo(() => {
+    if (!tokens?.accessToken) return null;
+    const decoded = decodeJWT<IsValidData>(tokens.accessToken);
+    return decoded?.rol || null;
+  }, [tokens]);
+
   return (
-    <AuthContext.Provider value={{ tokens, setTokens, isAuthenticated, logout }}>
+    <AuthContext.Provider value={{ tokens, setTokens, isAuthenticated, role, logout }}>
       {children}
     </AuthContext.Provider>
   );

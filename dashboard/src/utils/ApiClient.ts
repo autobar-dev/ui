@@ -5,10 +5,11 @@ import { Tokens } from "@/types/auth";
  */
 
 /**
- * Centralized API client that reads and refreshes auth tokens via injected callbacks.
+ * Centralized API client that handles authentication, token refreshes, and retries.
  */
 export class ApiClient {
     baseUrl: string;
+    private tokens: Tokens | null = null;
     private auth?: AuthConfig;
     private refreshPromise: Promise<Tokens> | null = null;
 
@@ -20,9 +21,16 @@ export class ApiClient {
     }
 
     /**
-     * Configure auth callbacks sourced from AuthContext.
+     * Set the current session tokens.
      */
-    configure(auth: AuthConfig) {
+    public setTokens(tokens: Tokens | null) {
+        this.tokens = tokens;
+    }
+
+    /**
+     * Configure auth callbacks.
+     */
+    public configure(auth: AuthConfig) {
         this.auth = auth;
     }
 
@@ -31,6 +39,13 @@ export class ApiClient {
      */
     public async get<TResponse>(url: string): Promise<TResponse> {
         return this.withAuthRetry(() => this.getInternal<TResponse>(url));
+    }
+
+    /**
+     * Perform a POST request with automatic token refresh on 401 responses.
+     */
+    public async post<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
+        return this.withAuthRetry(() => this.postInternal<TResponse>(url, body));
     }
 
     private async getInternal<TResponse>(url: string): Promise<TResponse> {
@@ -55,13 +70,6 @@ export class ApiClient {
         }
 
         return json.data;
-    }
-
-    /**
-     * Perform a POST request with automatic token refresh on 401 responses.
-     */
-    public async post<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
-        return this.withAuthRetry(() => this.postInternal<TResponse>(url, body));
     }
 
     private async postInternal<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
@@ -97,6 +105,7 @@ export class ApiClient {
                 throw error;
             }
 
+            // If we got a 401, try to refresh tokens and retry the action once.
             await this.refreshTokens();
             return action();
         }
@@ -106,10 +115,9 @@ export class ApiClient {
         const headers: Record<string, string> = {
             "Content-Type": "application/json"
         };
-        const accessToken = this.auth?.getTokens()?.accessToken;
 
-        if (accessToken) {
-            headers["Authorization"] = `Bearer ${accessToken}`;
+        if (this.tokens?.accessToken) {
+            headers["Authorization"] = `Bearer ${this.tokens.accessToken}`;
         }
 
         return headers;
@@ -120,11 +128,9 @@ export class ApiClient {
             throw new Error("Auth configuration not set");
         }
 
-        const currentTokens = this.auth.getTokens();
-        const refreshToken = currentTokens?.refreshToken;
+        const refreshToken = this.tokens?.refreshToken;
 
         if (!refreshToken) {
-            // Treat missing refresh token as a signed-out state to keep auth centralized.
             this.auth.onAuthFailure();
             throw new Error("Refresh token not available");
         }
@@ -133,7 +139,12 @@ export class ApiClient {
             this.refreshPromise = this.auth
                 .refresh(refreshToken)
                 .then((newTokens) => {
-                    this.auth?.setTokens(newTokens);
+                    // Update internal tokens immediately so retries use the fresh ones
+                    this.tokens = newTokens;
+                    
+                    // Notify the external system (e.g. AuthContext) of the update
+                    this.auth?.onTokensUpdated(newTokens);
+                    
                     return newTokens;
                 })
                 .finally(() => {
@@ -151,11 +162,10 @@ export class ApiClient {
 }
 
 /**
- * Auth callbacks that keep token state centralized in AuthContext.
+ * Auth callbacks that bridge ApiClient with the application's auth state.
  */
 type AuthConfig = {
-    getTokens: () => Tokens | null;
-    setTokens: (tokens: Tokens | null) => void;
+    onTokensUpdated: (tokens: Tokens) => void;
     refresh: (refreshToken: string) => Promise<Tokens>;
     onAuthFailure: () => void;
 };

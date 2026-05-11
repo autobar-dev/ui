@@ -1,14 +1,17 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { HiCube, HiCurrencyDollar, HiUsers, HiCpuChip, HiTag } from "react-icons/hi2";
+import { HiCube, HiCurrencyDollar, HiUsers, HiCpuChip, HiTag, HiBuildingStorefront } from "react-icons/hi2";
 import { ReactNode } from "react";
+import { UserRole } from "@/types/auth";
+import { useAuth } from "@/contexts/AuthContext";
 import { NavLink, Box, ScrollArea, Tooltip } from "@mantine/core";
 
 export type SidebarItemContent = {
   path: string,
   label: string,
   icon: ReactNode,
+  permissions?: UserRole[],
   children?: SidebarItemContent[],
 };
 
@@ -17,16 +20,25 @@ const items: SidebarItemContent[] = [
     path: "/users",
     label: "Users",
     icon: <HiUsers size={20} />,
+    permissions: ["admin", "owner"],
+  },
+  {
+    path: "/stations",
+    label: "Stations",
+    icon: <HiBuildingStorefront size={20} />,
+    permissions: ["admin", "owner", "maintainer"],
   },
   {
     path: "/products",
     label: "Products",
     icon: <HiTag size={20} />,
+    permissions: ["admin", "owner", "maintainer"],
   },
   {
     path: "/modules",
     label: "Modules",
     icon: <HiCube size={20} />,
+    permissions: ["admin", "owner", "maintainer"],
     children: [
       {
         path: "/modules/firmware",
@@ -39,12 +51,19 @@ const items: SidebarItemContent[] = [
     path: "/currencies",
     label: "Currencies",
     icon: <HiCurrencyDollar size={20} />,
+    permissions: ["admin"],
   },
 ];
 
 export default function Sidebar({ collapsed }: { collapsed?: boolean; }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { role } = useAuth();
+
+  const filteredItems = items.filter(item => {
+    if (!item.permissions) return true;
+    return role && item.permissions.includes(role);
+  });
 
   const renderItem = (item: SidebarItemContent) => {
     const active = pathname === item.path || (item.children?.some(c => pathname === c.path) ?? false);
@@ -116,7 +135,7 @@ export default function Sidebar({ collapsed }: { collapsed?: boolean; }) {
   return (
     <Box h="100%" p={collapsed ? "xs" : "md"} style={{ borderRight: '1px solid #f1f5f9', transition: 'padding 300ms ease' }}>
       <ScrollArea h="100%">
-        {items.map(renderItem)}
+        {filteredItems.map(renderItem)}
       </ScrollArea>
     </Box>
   );

@@ -33,7 +33,13 @@ export default function UserMenu({ user, role }: UserMenuProps) {
 
   const fullName = `${user.first_name} ${user.last_name}`.trim();
   const initials = getInitials(user);
-  const roleLabel = role === "admin" ? "Admin" : "User";
+  const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
+  const roleColor = {
+    admin: 'blue',
+    owner: 'indigo',
+    maintainer: 'teal',
+    user: 'gray'
+  }[role] || 'gray';
 
   const handleLogout = () => {
     logout(authRepository);
@@ -47,7 +53,7 @@ export default function UserMenu({ user, role }: UserMenuProps) {
             <Avatar
               radius="xl"
               size="md"
-              color={role === 'admin' ? 'blue' : 'gray'}
+              color={roleColor}
               variant="light"
             >
               {initials}
@@ -59,7 +65,7 @@ export default function UserMenu({ user, role }: UserMenuProps) {
               <Badge
                 size="xs"
                 variant="light"
-                color={role === 'admin' ? 'blue' : 'gray'}
+                color={roleColor}
                 visibleFrom="sm"
               >
                 {roleLabel}
@@ -83,7 +89,7 @@ export default function UserMenu({ user, role }: UserMenuProps) {
             mt="xs"
             size="sm"
             variant="light"
-            color={role === 'admin' ? 'amber' : 'slate'}
+            color={roleColor}
           >
             {roleLabel}
           </Badge>

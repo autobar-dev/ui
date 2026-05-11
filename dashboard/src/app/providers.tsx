@@ -71,24 +71,21 @@ const theme = createTheme({
 function AuthWrapper({ children }: { children: ReactNode; }) {
   const { isAuthenticated, tokens, setTokens } = useAuth();
   const { apiClient, authRepository } = useContext(RepositoriesContext);
-  const tokensRef = useRef<Tokens | null>(tokens);
-
-  useEffect(() => {
-    tokensRef.current = tokens;
-  }, [tokens]);
 
   useEffect(() => {
     if (!apiClient || !authRepository) {
       return;
     }
 
+    // Initialize ApiClient with current tokens
+    apiClient.setTokens(tokens);
+
     apiClient.configure({
-      getTokens: () => tokensRef.current,
-      setTokens,
+      onTokensUpdated: (newTokens: Tokens) => setTokens(newTokens),
       refresh: (refreshToken: string) => authRepository.refreshTokens(refreshToken),
       onAuthFailure: () => setTokens(null)
     });
-  }, [apiClient, authRepository, setTokens]);
+  }, [apiClient, authRepository, tokens, setTokens]);
 
   if (!isAuthenticated) {
     return <Login />;
