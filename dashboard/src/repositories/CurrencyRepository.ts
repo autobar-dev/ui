@@ -39,4 +39,8 @@ export class CurrencyRepository {
   public async getRemoteRate(from: string, to: string): Promise<ServiceRate> {
     return await this.apiClient.get<ServiceRate>(this.servicePath + `/rate/remote?from=${from}&to=${to}`);
   }
+
+  public async setCurrencyEnabled(code: string, enabled: boolean): Promise<void> {
+    return await this.apiClient.patch(this.servicePath + `/currency/${code}/status`, { enabled });
+  }
 }

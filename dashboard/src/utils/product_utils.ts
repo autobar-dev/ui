@@ -12,6 +12,7 @@ export function serviceProductToProduct(serviceProduct: ServiceProduct): Product
 
   return {
     id: serviceProduct.id,
+    slug: serviceProduct.slug,
     names: toMap(serviceProduct.names),
     descriptions: toMap(serviceProduct.descriptions),
     cover: serviceProduct.cover,

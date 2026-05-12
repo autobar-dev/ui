@@ -5,7 +5,7 @@ import { Wallet } from "@/types/wallet";
 export function serviceWalletToWallet(service_wallet: ServiceWallet): Wallet {
   return {
     id: service_wallet.id,
-    userEmail: service_wallet.user_email,
+    userId: service_wallet.user_id,
     currencyCode: service_wallet.currency_code,
     balance: service_wallet.balance,
   };
@@ -27,7 +27,7 @@ export function serviceTransactionToTransaction(service_transaction: ServiceTran
     case "refund":
       transactionType = TransactionType.Refund;
       break;
-    case "currency_change":
+    case "currency-change":
       transactionType = TransactionType.CurrencyChange;
       break;
   }

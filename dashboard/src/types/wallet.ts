@@ -1,6 +1,6 @@
 export type Wallet = {
   id: number,
-  userEmail: string,
+  userId: string,
   currencyCode: string,
   balance: number,
 };

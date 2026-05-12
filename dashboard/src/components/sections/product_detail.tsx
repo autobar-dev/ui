@@ -130,7 +130,7 @@ export default function ProductDetailSection({ id }: { id: number }) {
       <Card p="xl" radius={32} shadow="sm">
         <Group justify="space-between" align="flex-start">
           <Group gap="xl">
-            <Avatar src={product.cover?.url} size={120} radius={24} shadow="sm" />
+            <Avatar src={product.cover?.url} size={120} radius={24} />
             <Stack gap={4}>
               <Title order={2} fw={500}>{nameEn}</Title>
               <Text size="sm" c="dimmed" ff="monospace">{product.slug}</Text>
