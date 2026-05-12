@@ -33,35 +33,10 @@ export class CurrencyRepository {
   }
 
   public async getRate(from: string, to: string): Promise<ServiceRate> {
-    const url = this.servicePath + `/rate/?from=${from}&to=${to}`;
-
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      const data = (await response.json()).data;
-
-      return data as ServiceRate;
-    } catch (e) {
-      throw e;
-    }
+    return await this.apiClient.get<ServiceRate>(this.servicePath + `/rate/?from=${from}&to=${to}`);
   }
 
-  async setCurrencyEnabled(currency: string, enabled: boolean): Promise<void> {
-    const url = this.servicePath + "/currency/set-enabled";
-
-    try {
-      await fetch(url, {
-        method: "PUT",
-        cache: "no-store",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          code: currency,
-          enabled,
-        }),
-      });
-    } catch (e) {
-      throw e;
-    }
+  public async getRemoteRate(from: string, to: string): Promise<ServiceRate> {
+    return await this.apiClient.get<ServiceRate>(this.servicePath + `/rate/remote?from=${from}&to=${to}`);
   }
 }

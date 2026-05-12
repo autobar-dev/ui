@@ -7,7 +7,7 @@ export class AuthRepository {
         this.serviceUrl = serviceUrl;
     }
 
-    async refreshTokens(refreshToken: string): Promise<Tokens> {
+    async refreshTokens(refreshToken: string, setCookie: boolean = false): Promise<Tokens> {
         const resp = await fetch(this.serviceUrl + "/refresh", {
             method: "POST",
             headers: {
@@ -15,6 +15,7 @@ export class AuthRepository {
             },
             body: JSON.stringify({
                 refresh_token: refreshToken,
+                set_cookie: setCookie,
             }),
         });
 
@@ -31,7 +32,7 @@ export class AuthRepository {
         };
     }
 
-    async login(email: string, password: string): Promise<Tokens> {
+    async login(email: string, password: string, rememberMe: boolean = false, setCookie: boolean = false): Promise<Tokens> {
         const resp = await fetch(this.serviceUrl + "/user/login", {
             method: "POST",
             headers: {
@@ -40,6 +41,8 @@ export class AuthRepository {
             body: JSON.stringify({
                 email,
                 password,
+                remember_me: rememberMe,
+                set_cookie: setCookie,
             }),
         });
 
@@ -100,5 +103,45 @@ export class AuthRepository {
         }
 
         return json.data as IsValidData;
+    }
+
+    async getModuleLoginChallenge(): Promise<{ challenge_base64: string, expires_at: string }> {
+        const resp = await fetch(this.serviceUrl + "/module/login/challenge", {
+            method: "POST",
+        });
+
+        if (!resp.ok) {
+            const err = await resp.json();
+            throw new Error(err.message || "Failed to get module login challenge");
+        }
+
+        const json = await resp.json();
+        return json.data;
+    }
+
+    async loginModule(certificatePem: string, challengeBase64: string, signatureBase64: string): Promise<Tokens> {
+        const resp = await fetch(this.serviceUrl + "/module/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                certificate_pem: certificatePem,
+                challenge_base64: challengeBase64,
+                signature_base64: signatureBase64,
+            }),
+        });
+
+        if (!resp.ok) {
+            const err = await resp.json();
+            throw new Error(err.message || "Failed to login module");
+        }
+
+        const json = await resp.json();
+
+        return {
+            accessToken: json.data.access_token,
+            refreshToken: json.data.refresh_token,
+        };
     }
 }

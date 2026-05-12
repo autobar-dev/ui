@@ -1,8 +1,5 @@
-export default function ModulesFirmware() {
-    return (
-        // <ModulesSection />
-        <>
-            <h1>Firmware</h1>
-        </>
-    );
+import FirmwareSection from "@/components/sections/firmware";
+
+export default function ModulesFirmwarePage() {
+  return <FirmwareSection />;
 }

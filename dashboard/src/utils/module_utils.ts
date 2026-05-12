@@ -20,7 +20,7 @@ export function serviceModuleToModule(service_module: ServiceModule): Module {
         ? undefined
         : new Date(service_module.display_unit.updated_at),
     },
-    prices: service_module.prices,
+    prices: new Map(Object.entries(service_module.prices || {})),
     createdAt: new Date(service_module.created_at),
     updatedAt: new Date(service_module.updated_at),
   };

@@ -1,6 +1,8 @@
+import { ApiClient } from "@/utils/ApiClient";
+
 export type ServiceWallet = {
   id: number,
-  user_email: string,
+  user_id: string,
   currency_code: string,
   balance: number,
 };
@@ -8,7 +10,7 @@ export type ServiceWallet = {
 export type ServiceTransaction = {
   id: string,
   wallet_id: number,
-  type: string,
+  type: "deposit" | "withdraw" | "purchase" | "refund" | "currency-change",
   value: number,
   currency_code: string,
   created_at: string,
@@ -16,38 +18,29 @@ export type ServiceTransaction = {
 
 export class WalletRepository {
   private service_url: string;
+  private apiClient: ApiClient;
 
-  constructor(url: string) {
+  constructor(url: string, apiClient: ApiClient) {
     this.service_url = url;
+    this.apiClient = apiClient;
   }
 
-  async get(user_email: string): Promise<ServiceWallet> {
-    const url = this.service_url + `/wallet/?email=${user_email}`;
-
-    try {
-      // const response = await fetch(url, { cache: "no-store" });
-      const response = await fetch(url);
-      const data = (await response.json()).data;
-
-      return data as ServiceWallet;
-    } catch (e) {
-      throw e;
-    }
+  async get(): Promise<ServiceWallet> {
+    return await this.apiClient.get<ServiceWallet>(this.service_url + "/wallet/");
   }
 
-  async getAllTransactionForWallet(user_email: string): Promise<ServiceTransaction[]> {
-    const url = this.service_url + `/transaction/get-all?email=${user_email}`;
+  async create(userId: string, currencyCode: string): Promise<void> {
+    return await this.apiClient.post(this.service_url + "/wallet/create", {
+      user_id: userId,
+      currency_code: currencyCode,
+    });
+  }
 
-    try {
-      // const response = await fetch(url, { cache: "no-store" });
-      const response = await fetch(url);
-      const data = (await response.json()).data;
+  async getTransaction(id: string): Promise<ServiceTransaction> {
+    return await this.apiClient.get<ServiceTransaction>(this.service_url + `/transaction/get?id=${id}`);
+  }
 
-      console.log(data);
-
-      return data as ServiceTransaction[];
-    } catch (e) {
-      throw e;
-    }
+  async getAllTransactions(): Promise<ServiceTransaction[]> {
+    return await this.apiClient.get<ServiceTransaction[]>(this.service_url + "/transaction/get-all");
   }
 }

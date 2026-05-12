@@ -28,6 +28,13 @@ export class ApiClient {
     }
 
     /**
+     * Get the current session tokens.
+     */
+    public getTokens(): Tokens | null {
+        return this.tokens;
+    }
+
+    /**
      * Configure auth callbacks.
      */
     public configure(auth: AuthConfig) {
@@ -46,6 +53,34 @@ export class ApiClient {
      */
     public async post<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
         return this.withAuthRetry(() => this.postInternal<TResponse>(url, body));
+    }
+
+    /**
+     * Perform a PUT request with automatic token refresh on 401 responses.
+     */
+    public async put<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
+        return this.withAuthRetry(() => this.putInternal<TResponse>(url, body));
+    }
+
+    /**
+     * Perform a PATCH request with automatic token refresh on 401 responses.
+     */
+    public async patch<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
+        return this.withAuthRetry(() => this.patchInternal<TResponse>(url, body));
+    }
+
+    /**
+     * Perform a DELETE request with automatic token refresh on 401 responses.
+     */
+    public async delete<TResponse>(url: string): Promise<TResponse> {
+        return this.withAuthRetry(() => this.deleteInternal<TResponse>(url));
+    }
+
+    /**
+     * Perform a POST request with FormData with automatic token refresh on 401 responses.
+     */
+    public async postFormData<TResponse>(url: string, formData: FormData): Promise<TResponse> {
+        return this.withAuthRetry(() => this.postFormDataInternal<TResponse>(url, formData));
     }
 
     private async getInternal<TResponse>(url: string): Promise<TResponse> {
@@ -86,6 +121,108 @@ export class ApiClient {
 
         if (!response.ok) {
             throw new Error(`Error making POST request: ${response.status}`);
+        }
+
+        const json: HttpResponse<TResponse> = await response.json();
+
+        if (json.status === "error") {
+            throw new Error("API error: " + json.error);
+        }
+
+        return json.data;
+    }
+
+    private async putInternal<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
+        const headers = this.buildHeaders();
+        const response = await fetch(`${this.baseUrl}${url}`, {
+            method: "PUT",
+            headers,
+            body: JSON.stringify(body)
+        });
+
+        if (response.status === 401) {
+            throw new UnauthorizedError("Unauthorized PUT request");
+        }
+
+        if (!response.ok) {
+            throw new Error(`Error making PUT request: ${response.status}`);
+        }
+
+        const json: HttpResponse<TResponse> = await response.json();
+
+        if (json.status === "error") {
+            throw new Error("API error: " + json.error);
+        }
+
+        return json.data;
+    }
+
+    private async patchInternal<TResponse>(url: string, body: Record<string, any>): Promise<TResponse> {
+        const headers = this.buildHeaders();
+        const response = await fetch(`${this.baseUrl}${url}`, {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify(body)
+        });
+
+        if (response.status === 401) {
+            throw new UnauthorizedError("Unauthorized PATCH request");
+        }
+
+        if (!response.ok) {
+            throw new Error(`Error making PATCH request: ${response.status}`);
+        }
+
+        const json: HttpResponse<TResponse> = await response.json();
+
+        if (json.status === "error") {
+            throw new Error("API error: " + json.error);
+        }
+
+        return json.data;
+    }
+
+    private async deleteInternal<TResponse>(url: string): Promise<TResponse> {
+        const headers = this.buildHeaders();
+        const response = await fetch(`${this.baseUrl}${url}`, {
+            method: "DELETE",
+            headers
+        });
+
+        if (response.status === 401) {
+            throw new UnauthorizedError("Unauthorized DELETE request");
+        }
+
+        if (!response.ok) {
+            throw new Error(`Error making DELETE request: ${response.status}`);
+        }
+
+        const json: HttpResponse<TResponse> = await response.json();
+
+        if (json.status === "error") {
+            throw new Error("API error: " + json.error);
+        }
+
+        return json.data;
+    }
+
+    private async postFormDataInternal<TResponse>(url: string, formData: FormData): Promise<TResponse> {
+        const headers = this.buildHeaders();
+        // Remove Content-Type so the browser sets it with the correct boundary
+        delete headers["Content-Type"];
+
+        const response = await fetch(`${this.baseUrl}${url}`, {
+            method: "POST",
+            headers,
+            body: formData
+        });
+
+        if (response.status === 401) {
+            throw new UnauthorizedError("Unauthorized POST FormData request");
+        }
+
+        if (!response.ok) {
+            throw new Error(`Error making POST FormData request: ${response.status}`);
         }
 
         const json: HttpResponse<TResponse> = await response.json();
