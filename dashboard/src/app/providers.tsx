@@ -16,6 +16,7 @@ import { ProductRepository } from '@/repositories/ProductRepository';
 import { MantineProvider, createTheme, MantineColorsTuple } from '@mantine/core';
 import { WalletRepository } from '@/repositories/WalletRepository';
 import { FileRepository } from '@/repositories/FileRepository';
+import { RealtimeRepository } from '@/repositories/RealtimeRepository';
 
 const myColor: MantineColorsTuple = [
   '#eff6ff',
@@ -107,6 +108,7 @@ export default function Providers({ children }: { children: ReactNode; }) {
   const [productRepository, setProductRepository] = useState<ProductRepository>();
   const [walletRepository, setWalletRepository] = useState<WalletRepository>();
   const [fileRepository, setFileRepository] = useState<FileRepository>();
+  const [realtimeRepository, setRealtimeRepository] = useState<RealtimeRepository>();
 
   useEffect(() => {
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
@@ -119,6 +121,7 @@ export default function Providers({ children }: { children: ReactNode; }) {
     const productRepository = new ProductRepository("/product", apiClient);
     const walletRepository = new WalletRepository("/wallet", apiClient);
     const fileRepository = new FileRepository("/file", apiClient);
+    const realtimeRepository = new RealtimeRepository("/realtime", apiClient);
 
     setApiClient(apiClient);
     setAuthRepository(authRepository);
@@ -128,6 +131,7 @@ export default function Providers({ children }: { children: ReactNode; }) {
     setProductRepository(productRepository);
     setWalletRepository(walletRepository);
     setFileRepository(fileRepository);
+    setRealtimeRepository(realtimeRepository);
   }, []);
 
   useEffect(() => {
@@ -139,9 +143,10 @@ export default function Providers({ children }: { children: ReactNode; }) {
       !!moduleRepository &&
       !!productRepository &&
       !!walletRepository &&
-      !!fileRepository
+      !!fileRepository &&
+      !!realtimeRepository
     ));
-  }, [apiClient, authRepository, currencyRepository, userRepository, moduleRepository, productRepository, walletRepository, fileRepository]);
+  }, [apiClient, authRepository, currencyRepository, userRepository, moduleRepository, productRepository, walletRepository, fileRepository, realtimeRepository]);
 
   return (
     <MantineProvider theme={theme}>
@@ -159,6 +164,7 @@ export default function Providers({ children }: { children: ReactNode; }) {
           productRepository: productRepository!,
           walletRepository: walletRepository!,
           fileRepository: fileRepository!,
+          realtimeRepository: realtimeRepository!,
         }}>
           <AuthProvider>
             <AuthWrapper>

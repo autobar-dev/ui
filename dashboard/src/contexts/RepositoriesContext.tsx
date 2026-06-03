@@ -10,6 +10,7 @@ import { ModuleRepository } from "@/repositories/ModuleRepository";
 import { ProductRepository } from "@/repositories/ProductRepository";
 import { WalletRepository } from "@/repositories/WalletRepository";
 import { FileRepository } from "@/repositories/FileRepository";
+import { RealtimeRepository } from "@/repositories/RealtimeRepository";
 
 type RepositoriesContextValues = {
     apiClient: ApiClient;
@@ -20,6 +21,7 @@ type RepositoriesContextValues = {
     productRepository: ProductRepository;
     walletRepository: WalletRepository;
     fileRepository: FileRepository;
+    realtimeRepository: RealtimeRepository;
 };
 
 export const RepositoriesContext = createContext<RepositoriesContextValues>({
@@ -31,4 +33,5 @@ export const RepositoriesContext = createContext<RepositoriesContextValues>({
     productRepository: null as any,
     walletRepository: null as any,
     fileRepository: null as any,
+    realtimeRepository: null as any,
 });

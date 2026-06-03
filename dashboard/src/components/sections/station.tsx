@@ -238,9 +238,26 @@ export default function StationDetailsSection({ id }: { id: number }) {
     return (
       <Table.Tr key={module.serialNumber}>
         <Table.Td align="center">
-          <Text size="xs" ff="monospace" fw={300} style={{ backgroundColor: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', display: 'inline-block' }}>
-            {module.serialNumber}
-          </Text>
+          <Link href={`/modules/${module.serialNumber}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Text 
+              size="xs" 
+              ff="monospace" 
+              fw={500} 
+              style={{ 
+                backgroundColor: 'var(--color-brand-faint)', 
+                color: 'var(--color-brand-emphasis)', 
+                padding: '4px 8px', 
+                borderRadius: '6px', 
+                border: '1px solid var(--color-brand-muted)', 
+                display: 'inline-block',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              className="hover:scale-105 hover:shadow-xs"
+            >
+              {module.serialNumber}
+            </Text>
+          </Link>
         </Table.Td>
         <Table.Td align="center">{productElement}</Table.Td>
         <Table.Td align="center">{unitElement}</Table.Td>
