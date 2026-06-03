@@ -27,10 +27,19 @@ export default function ModuleDetailsSection({ serialNumber }: ModuleDetailsSect
   const [latencyData, setLatencyData] = useState<LatencyReport[]>([]);
   const [loadingLatency, setLoadingLatency] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [currentTime, setCurrentTime] = useState<number>(Date.now());
 
   // Set mounted state to prevent SSR hydration mismatch with Recharts
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Update current time every second to reactively check for offline status
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   // Fetch static currencies info for price display
@@ -129,10 +138,20 @@ export default function ModuleDetailsSection({ serialNumber }: ModuleDetailsSect
     return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   };
 
+  const isOffline = latencyData.length === 0 || (() => {
+    const latest = latencyData[latencyData.length - 1];
+    const latestTime = parseTimestamp(latest.sent_at).getTime();
+    return (currentTime - latestTime) > 15000;
+  })();
+
   // Custom Dot component to style points based on status
   const renderCustomDot = (props: any) => {
     const { cx, cy, payload } = props;
     if (cx === undefined || cy === undefined || !payload) return null;
+
+    if (payload.command?.toLowerCase() === "heartbeat") {
+      return null;
+    }
 
     let fill = "#94a3b8"; // Slate gray for unknown
     if (payload.status === "replied") {
@@ -361,13 +380,22 @@ export default function ModuleDetailsSection({ serialNumber }: ModuleDetailsSect
                   <Title order={3} size="h4" fw={500}>
                     Latency History
                   </Title>
-                  <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    <Text size="10px" fw={700} c="emerald.7" style={{ letterSpacing: "0.5px" }}>LIVE</Text>
-                  </div>
+                  {!isOffline ? (
+                    <div key="badge-live" className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      </span>
+                      <Text size="10px" fw={700} c="green.7" style={{ letterSpacing: "0.5px" }}>LIVE</Text>
+                    </div>
+                  ) : (
+                    <div key="badge-offline" className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-50 border border-red-200">
+                      <span className="relative flex h-2 w-2">
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                      </span>
+                      <Text size="10px" fw={700} c="red.7" style={{ letterSpacing: "0.5px" }}>OFFLINE</Text>
+                    </div>
+                  )}
                 </Group>
 
                 {/* Status Legend */}
@@ -408,11 +436,11 @@ export default function ModuleDetailsSection({ serialNumber }: ModuleDetailsSect
                         />
                         <Tooltip content={<CustomTooltip />} />
                         <Line
-                          type="monotone"
+                          type="natural"
                           dataKey="latency_ms"
-                          stroke="#3b82f6"
+                          stroke="#10b981"
                           strokeWidth={2}
-                          dot={false}
+                          dot={renderCustomDot}
                           activeDot={renderActiveDot}
                           isAnimationActive={false}
                         />
